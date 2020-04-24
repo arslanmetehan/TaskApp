@@ -41,12 +41,13 @@ namespace TaskApp.Services
         public List<UserModel> GetAllUsers()
         {
             var users = this._userRepository.GetAll().ToList();
-           /* var missions = this._missionRepository.GetAll().Select(mission => new MissionModel(mission)).ToList();
+            /* var missions = this._missionRepository.GetAll().Select(mission => new MissionModel(mission)).ToList();
 
-            users.ForEach(u =>
-            {
-                u.GroupName = missions.FirstOrDefault(ug => ug.Id == u.GroupId)?.Name;
-            });*/
+             users.ForEach(u =>
+             {
+                 u.Username = missions.FirstOrDefault(m => m.UserId == u.Id)?.Name;
+                 m.MissionUsername = users.FirstOrDefault(m => m.UserId == u.Id)?.Name;
+             });*/
 
             return users;
         }

@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TaskApp.Entities;
+using TaskApp.Helpers;
 using TaskApp.Models;
 using TaskApp.Services;
 
@@ -51,7 +53,15 @@ namespace TaskApp.Controllers
 				newUser.Username = model.Username;
 				newUser.Email = model.Email;
 				newUser.Password = model.Password;
-				
+				var users = _userService.GetAllUsers();
+				foreach (var user in users)
+				{
+					if (user.Username == newUser.Username)
+					{
+						
+						return Json(ApiResponse<UserModel>.WithError("This Username has already exist !"));
+					}
+				}
 				this._userService.AddNewUser(newUser);
 				result = this._userService.GetById(newUser.Id);
 

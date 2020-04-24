@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TaskApp.Entities;
 using TaskApp.Models;
 using TaskApp.Persistence;
+using TaskApp.Helpers;
 
 namespace TaskApp.Services
 {
@@ -39,6 +40,15 @@ namespace TaskApp.Services
         public OperationModel GetById(int id)
         {
             return this._operationRepository.GetById(id);
+        }
+        public List<OperationModel> GetAll()
+        {
+            return this._operationRepository.GetAll().ToList();
+        }
+        public List<OperationModel> GetOperationsByMissionId(int missionId)
+        {
+           
+            return this._operationRepository.GetByMissionId(missionId).Select(operation => new OperationModel(operation)).ToList();
         }
     }
 }

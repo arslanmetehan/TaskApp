@@ -13,5 +13,6 @@ namespace TaskApp.Persistence
         void Delete(int id);
         IEnumerable<OperationModel> GetAll();
         OperationModel GetById(int id);
+        IEnumerable<Operation> GetByMissionId(int missionId);
     }
 }

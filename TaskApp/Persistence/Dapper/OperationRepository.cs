@@ -34,7 +34,8 @@ namespace TaskApp.Persistence.Dapper
         {
             using (IDbConnection dbConnection = this.OpenConnection())
             {
-                return dbConnection.Query<OperationModel>("SELECT o.*, o.MissionId as m.Id FROM Operation o, Mission m WHERE m.Id = o.MissionId");
+                // return dbConnection.Query<OperationModel>("SELECT o.*, o.MissionId as Id FROM Mission m, Mission m WHERE o.MissionId = m.Id");
+                return dbConnection.Query<OperationModel>("SELECT * From Operation");
             }
         }
 
@@ -45,7 +46,14 @@ namespace TaskApp.Persistence.Dapper
                 return dbConnection.QuerySingle<OperationModel>("SELECT o.*, o.MissionId as Id FROM Mission m, Mission m WHERE o.MissionId = m.Id AND o.Id = @Id", new { Id = id });
             }
         }
+        public IEnumerable<Operation> GetByMissionId(int missionId)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+                return dbConnection.Query<Operation>("SELECT * FROM Operation WHERE MissionId = @missionId", new { MissionId = missionId });
+            }
+        }
 
-      
+
     }
 }

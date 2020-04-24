@@ -12,5 +12,8 @@ namespace TaskApp.Services
         void AddNewOperation(Operation operation);
         void Delete(int id);
         OperationModel GetById(int id);
+        List<OperationModel> GetOperationsByMissionId(int missionId);
+
+        List<OperationModel> GetAll();
     }
 }

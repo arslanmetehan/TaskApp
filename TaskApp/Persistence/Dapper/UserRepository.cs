@@ -31,7 +31,7 @@ namespace TaskApp.Persistence.Dapper
         {
             using (IDbConnection dbConnection = this.OpenConnection())
             {
-                return dbConnection.Query<UserModel>("SELECT u.*, m.UserId as Id FROM User u, Mission m WHERE u.Id = m.UserId");
+                return dbConnection.Query<UserModel>("SELECT * FROM User");
             }
         }
 

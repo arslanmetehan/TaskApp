@@ -10,8 +10,9 @@ namespace TaskApp.Models
     {
         public int Id { get; set; }
         public string MissionName { get; set; }
-        public string MissionUsername { get; set; }
         public int UserId { get; set; }
+        public string MissionUsername { get; set; }
+        
 
         public MissionModel() { }
 

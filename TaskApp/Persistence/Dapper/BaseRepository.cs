@@ -64,8 +64,7 @@ namespace TaskApp.Persistence.Dapper
 				sql = "create table Mission (" +
 							"Id INTEGER PRIMARY KEY, " +
 							"MissionName TEXT NOT NULL," +
-							"UserId INTEGER NOT NULL," +
-							"Username TEXT NOT NULL" +
+							"UserId INTEGER NOT NULL" +
 						")";
 
 				command = new SQLiteCommand(sql, conn);

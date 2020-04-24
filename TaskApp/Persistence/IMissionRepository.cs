@@ -11,9 +11,10 @@ namespace TaskApp.Persistence
     {
         void Insert(Mission mission);
         void Delete(int id);
-        IEnumerable<MissionModel> GetAll();
+        IEnumerable<MissionModel> GetMissionsByUserId(int userId);
 
         IEnumerable<MissionModel> GetAllMissions();
         MissionModel GetById(int id);
+        IEnumerable<Mission> GetByUserId(int id);
     }
 }
