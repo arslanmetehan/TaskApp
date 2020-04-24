@@ -79,6 +79,7 @@ namespace TaskApp.Persistence.Dapper
 				sql = "create table Operation (" +
 							"Id INTEGER PRIMARY KEY, " +
 							"OperationContent TEXT NOT NULL," +
+							"OperationStatus INT NOT NULL," +
 							"MissionId INTEGER NOT NULL" +
 						")";
 

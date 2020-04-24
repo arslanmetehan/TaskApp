@@ -36,7 +36,11 @@ namespace TaskApp.Controllers
         }
         public ActionResult MyMissionDetail(int id)
         {
-            var model = this.services.ViewService.CreateViewModel<BaseViewModel>(this.HttpContext, nameof(this.MyMissionDetail));
+            var missionId = id;
+           
+            var model = this.services.ViewService.CreateViewModel<MissionDetailViewModel>(this.HttpContext, nameof(this.MyMissionDetail));
+            model.MissionId = id.ToString();
+        
             return View(model);
         }
         public IActionResult Login()

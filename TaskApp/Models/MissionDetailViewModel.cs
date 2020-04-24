@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace TaskApp.Models
 {
-    public class BaseViewModel
+    public class MissionDetailViewModel : BaseViewModel
     {
-        public string PageTitle { get; set; }
-        public UserModel OnlineUser { get; set; }
+        public string MissionId { get; set; }
     }
 }

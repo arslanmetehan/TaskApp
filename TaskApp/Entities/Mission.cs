@@ -12,5 +12,6 @@ namespace TaskApp.Entities
         public int Id { get; set; }
         public string MissionName { get; set; }
         public int UserId { get; set; }
-    }
+    
+    }   
 }

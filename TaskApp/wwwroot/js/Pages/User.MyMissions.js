@@ -9,7 +9,7 @@
 function tryGetMissions() {
 	httpRequest("api/Mission/GetMyMissions", "GET", null, handleGetMissions, showError.bind(null, "System Error"));
 }
-function redirectAddOperation(missionId) {
+function redirectOperationDetails(missionId) {
 	redirect("User/MyMissionDetail/" + missionId);
 }
 function handleGetMissions(response) {
@@ -55,7 +55,7 @@ function handleInsertMission(response) {
 function appendMission(mission) {
 	let missionTemplate = '<div id="mission-id-##mission.Id##">';
 	missionTemplate += '<div>##mission.MissionName## [User: ##mission.MissionUsername##]</div>';
-	missionTemplate += '<button onclick="redirectAddOperation(##mission.Id##)" id="operation-create-btn-##mission.Id##">Add Operation</button>';
+	missionTemplate += '<button onclick="redirectOperationDetails(##mission.Id##)" id="operation-details-btn-##mission.Id##">Operation Details</button>';
 	missionTemplate += '<div style="margin-bottom:20px;"><button id="mission-delete-btn-##mission.Id##">Delete Mission</button></div>';
 	missionTemplate += '</div>';
 
@@ -96,75 +96,4 @@ function showError(message) {
 function hideError() {
 	let errorDiv = document.getElementById("error");
 	errorDiv.style.display = "none";
-}
-function tryGetOperations() {
-	httpRequest("api/Mission/GetCurrentMissionOperations()", "GET", null, handleGetOperations, showError.bind(null, "System Error"));
-}
-
-function handleGetOperations(response) {
-	if (!response.Success) {
-		showError(response.ErrorMessage);
-		return;
-	}
-
-	page.operations = response.Data;
-	for (let i = 0; i < page.operations.length; i++) {
-		let operation = page.operations[i];
-		appendOperation(operation);
-	}
-}
-
-function tryInsertOperation() {
-	let operationcontent = document.getElementById("operation-create-operationcontent").value;
-
-	let data = {
-		OperationContent: operationcontent,
-
-
-	};
-
-	httpRequest("api/Mission/AddOperation", "POST", data, handleInsertOperation, showError.bind(null, "System Error"));
-}
-
-function handleInsertOperation(response) {
-	if (!response.Success) {
-		showError(response.ErrorMessage);
-		return;
-	}
-
-	let operation = response.Data;
-	appendOperation(operation);
-}
-function appendOperation(operation) {
-	let operationTemplate = '<div id="operation-id-##operation.Id##">';
-	operationTemplate += '<div>##operation.OperationContent##</div>';
-	operationTemplate += '<div style="margin-bottom:20px;"><button id="operation-delete-btn-##operation.Id##">Delete Operation</button></div>';
-	operationTemplate += '<div>button id="operation-create-btn">ADD OPERATION</button></div>';
-	operationTemplate += '</div>';
-
-	let operationHtmlString = operationTemplate
-		.split("##operation.Id##").join(operation.Id)//.replace("##user.Id##", userModel.Id)
-		.split("##operation.OperationContent##").join(operation.OperationContent)//.replace("##user.Username##", userModel.Username)
-
-	let operationHtml = toDom(operationHtmlString);
-
-	let operationListDiv = document.getElementById("operation-list");
-	operationListDiv.appendChild(operationHtml);
-
-	let deleteBtn = document.getElementById("operation-delete-btn-" + operation.Id);
-	deleteBtn.onclick = tryDeleteOperation.bind(null, operation.Id);
-}
-
-function tryDeleteOperation(operationId) {
-	httpRequest("api/Mission/DeleteOperation", "DELETE", operationId.toString(), handleDeleteOperation.bind(null, operationId), showError.bind(null, "System Error"));
-}
-
-function handleDeleteOperation(operationId, response) {
-	if (!response.Success) {
-		showError(response.ErrorMessage);
-		return;
-	}
-
-	let operationDiv = document.getElementById("operation-id-" + operationId);
-	operationDiv.parentNode.removeChild(operationDiv);
 }

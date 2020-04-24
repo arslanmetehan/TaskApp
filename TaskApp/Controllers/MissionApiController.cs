@@ -9,6 +9,7 @@ using TaskApp.Services;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using System.Data;
+using System.Threading;
 
 namespace TaskApp.Controllers
 {
@@ -52,17 +53,8 @@ namespace TaskApp.Controllers
 		{
 			try
 			{
-				var user = this._userService.GetOnlineUser(this.HttpContext);
-				var missions = this._missionService.GetAllMyMissionsByUserId(user.Id);
 				var operations = this._operationService.GetAll();
 				
-				
-				/*foreach (var mission in missions)
-				{
-					mission.MissionUsername = user.Username;
-				}*/
-
-
 				var response = ApiResponse<List<OperationModel>>.WithSuccess(operations);
 
 				return Json(response);
@@ -97,21 +89,56 @@ namespace TaskApp.Controllers
 		}
 		[HttpPost]
 		[Route(nameof(AddOperation))]
-		public ActionResult<ApiResponse<MissionModel>> AddOperation([FromBody]CreateOperationModel model)
+		public ActionResult<ApiResponse<OperationModel>> AddOperation([FromBody]CreateOperationModel model)
 		{
 			try
 			{
-				OperationModel result = null;
-				var user = this._userService.GetOnlineUser(this.HttpContext);
+				
+				var operations = this._operationService.GetAll();
+				int operationCount = 0;
+				foreach (OperationModel operation in operations)
+				{
+					if (operation.MissionId == Convert.ToInt32(model.MissionId))
+					{
+						operationCount++;
+					}
+				}
+				if (operationCount >= 9)
+				{
+					return Json(ApiResponse<UserModel>.WithError("You cant add operations more then 9 !"));
+				}
+
 				var newOperation = new Operation();
 				newOperation.OperationContent = model.OperationContent;
-				newOperation.MissionId = model.MissionId;
-
-
-				this._operationService.AddNewOperation(newOperation);
-				result = this._operationService.GetById(newOperation.Id);
+				newOperation.MissionId = Convert.ToInt32(model.MissionId);
+				newOperation.OperationStatus = 0;
 				
+				
+		
+				this._operationService.AddNewOperation(newOperation);
+				OperationModel result = null;
+				result = this._operationService.GetById(newOperation.Id);
 				return Json(ApiResponse<OperationModel>.WithSuccess(result));
+			}
+			catch (Exception exp)
+			{
+				return Json(ApiResponse<OperationModel>.WithError(exp.ToString()));
+			}
+		}
+		[HttpPost]
+		[Route(nameof(UpdateOperation))]
+		public ActionResult<ApiResponse<OperationModel>> UpdateOperation([FromBody]CreateOperationModel model)
+		{
+			try
+			{
+				var operation = this._operationService.GetByOptId(model.Id);
+				
+				if(operation.OperationStatus == 1)
+				{
+					return Json(ApiResponse<OperationModel>.WithSuccess());
+				}
+				this._operationService.UpdateOperationById(operation.Id);
+				return Json(ApiResponse<OperationModel>.WithSuccess());
 			}
 			catch (Exception exp)
 			{
@@ -124,6 +151,7 @@ namespace TaskApp.Controllers
 		{
 			try
 			{
+				
 				this._missionService.Delete(missionId);
 
 				return Json(ApiResponse.WithSuccess());
@@ -139,7 +167,23 @@ namespace TaskApp.Controllers
 		{
 			try
 			{
+				
+				var operations = this._operationService.GetAll();
+				var OptToBeDeleted = this._operationService.GetByOptId(operationId);
+				List<OperationModel> AllOperations = new List<OperationModel>();
+				int operationCount = 0;
+				foreach (OperationModel operation in operations)
+				{
+					if (operation.MissionId == OptToBeDeleted.MissionId)
+					{
+						operationCount++;
+					}
+				}
 				this._operationService.Delete(operationId);
+				if (operationCount <= 9)
+				{
+					return Json(ApiResponse.WithSuccess());
+				}
 
 				return Json(ApiResponse.WithSuccess());
 			}

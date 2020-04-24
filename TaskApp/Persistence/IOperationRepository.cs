@@ -14,5 +14,7 @@ namespace TaskApp.Persistence
         IEnumerable<OperationModel> GetAll();
         OperationModel GetById(int id);
         IEnumerable<Operation> GetByMissionId(int missionId);
+        void UpdateOperationById(int id);
+        OperationModel GetByOptId(int id);
     }
 }

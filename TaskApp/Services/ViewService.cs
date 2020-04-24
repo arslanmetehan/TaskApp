@@ -21,6 +21,7 @@ namespace TaskApp.Services
 			var model = new TModel();
 			model.PageTitle = pageTitle;
 			model.OnlineUser = this.services.UserService.GetOnlineUser(httpContext);
+		
 
 			return model;
 		}

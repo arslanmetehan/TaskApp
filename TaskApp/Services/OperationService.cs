@@ -41,6 +41,14 @@ namespace TaskApp.Services
         {
             return this._operationRepository.GetById(id);
         }
+        public void UpdateOperationById(int id)
+        {
+            this._operationRepository.UpdateOperationById(id);
+        }
+        public OperationModel GetByOptId(int id)
+        {
+            return this._operationRepository.GetByOptId(id);
+        }
         public List<OperationModel> GetAll()
         {
             return this._operationRepository.GetAll().ToList();
