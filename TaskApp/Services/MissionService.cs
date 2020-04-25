@@ -62,6 +62,10 @@ namespace TaskApp.Services
         {
             return this._missionRepository.GetByUserId(userId).Select(article => new MissionModel(article)).ToList();
         }
+        public IEnumerable<MissionModel> GetAll()
+        {
+            return this._missionRepository.GetAllMissions().ToList();
+        }
         List<MissionModel> IMissionService.GetAllMyMissionsByUserId(int userId)
         {
            

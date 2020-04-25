@@ -15,5 +15,6 @@ namespace TaskApp.Services
 		MissionModel GetById(int id);
 		List<MissionModel> GetAllMyMissionsByUserId(int userId);
 		List<MissionModel> GetMissionsByUserId(int userId);
+		IEnumerable<MissionModel> GetAll();
 	}
 }

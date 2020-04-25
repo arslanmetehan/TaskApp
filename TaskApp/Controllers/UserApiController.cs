@@ -47,12 +47,25 @@ namespace TaskApp.Controllers
 		{
 			try
 			{
+				if (model.Username == null || model.Username == "")
+				{
+					return Json(ApiResponse<UserModel>.WithError("Username is required !"));
+				}
+				if(model.Email == null || model.Email == "")
+				{
+					return Json(ApiResponse<UserModel>.WithError("Email is required !"));
+				}
+				if (model.Password == null || model.Password == "")
+				{
+					return Json(ApiResponse<UserModel>.WithError("Password is required !"));
+				}
 				UserModel result = null;
 
 				var newUser = new User();
 				newUser.Username = model.Username;
 				newUser.Email = model.Email;
 				newUser.Password = model.Password;
+				
 				var users = _userService.GetAllUsers();
 				foreach (var user in users)
 				{

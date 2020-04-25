@@ -16,6 +16,7 @@ C:\Workspace\github\TaskApp\TaskApp\bin\Debug\netcoreapp3.1\runtimes\linux-x64\n
 C:\Workspace\github\TaskApp\TaskApp\bin\Debug\netcoreapp3.1\runtimes\osx-x64\native\netstandard2.0\SQLite.Interop.dll
 C:\Workspace\github\TaskApp\TaskApp\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\netstandard2.0\SQLite.Interop.dll
 C:\Workspace\github\TaskApp\TaskApp\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\netstandard2.0\SQLite.Interop.dll
+C:\Workspace\github\TaskApp\TaskApp\obj\Debug\netcoreapp3.1\TaskApp.csprojAssemblyReference.cache
 C:\Workspace\github\TaskApp\TaskApp\obj\Debug\netcoreapp3.1\TaskApp.csproj.CoreCompileInputs.cache
 C:\Workspace\github\TaskApp\TaskApp\obj\Debug\netcoreapp3.1\TaskApp.MvcApplicationPartsAssemblyInfo.cache
 C:\Workspace\github\TaskApp\TaskApp\obj\Debug\netcoreapp3.1\TaskApp.RazorAssemblyInfo.cache
@@ -45,4 +46,4 @@ C:\Workspace\github\TaskApp\TaskApp\obj\Debug\netcoreapp3.1\staticwebassets\Task
 C:\Workspace\github\TaskApp\TaskApp\obj\Debug\netcoreapp3.1\TaskApp.dll
 C:\Workspace\github\TaskApp\TaskApp\obj\Debug\netcoreapp3.1\TaskApp.pdb
 C:\Workspace\github\TaskApp\TaskApp\obj\Debug\netcoreapp3.1\TaskApp.genruntimeconfig.cache
-C:\Workspace\github\TaskApp\TaskApp\obj\Debug\netcoreapp3.1\TaskApp.csprojAssemblyReference.cache
+C:\Workspace\github\TaskApp\TaskApp\obj\Debug\netcoreapp3.1\Razor\Views\Home\MissionDetail.cshtml.g.cs

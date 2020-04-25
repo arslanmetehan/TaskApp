@@ -53,10 +53,11 @@ function handleInsertMission(response) {
 }
 
 function appendMission(mission) {
-	let missionTemplate = '<div id="mission-id-##mission.Id##">';
-	missionTemplate += '<div>##mission.MissionName## [User: ##mission.MissionUsername##]</div>';
-	missionTemplate += '<button onclick="redirectOperationDetails(##mission.Id##)" id="operation-details-btn-##mission.Id##">Operation Details</button>';
-	missionTemplate += '<div style="margin-bottom:20px;"><button id="mission-delete-btn-##mission.Id##">Delete Mission</button></div>';
+	let missionTemplate = '<div class="mission-box clearfix" id="mission-id-##mission.Id##">';
+	missionTemplate += '<div class="mission-name" >##mission.MissionName##</div>';
+	missionTemplate += '<div class="user-name">##mission.MissionUsername##</div > ';
+	missionTemplate += '<button class="mission-btn" onclick="redirectOperationDetails(##mission.Id##)" id="operation-details-btn-##mission.Id##">Operation Details</button>';
+	missionTemplate += '<div style="margin-bottom:20px;"><button class="mission-btn" id="mission-delete-btn-##mission.Id##">Delete Mission</button></div>';
 	missionTemplate += '</div>';
 
 	let missionHtmlString = missionTemplate

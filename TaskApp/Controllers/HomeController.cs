@@ -24,6 +24,15 @@ namespace TaskApp.Controllers
 			var model = this.services.ViewService.CreateViewModel<BaseViewModel>(this.HttpContext, "Home");
 			return View(model);
 		}
+		public ActionResult MissionDetail(int id)
+		{
+			var missionId = id;
+
+			var model = this.services.ViewService.CreateViewModel<MissionDetailViewModel>(this.HttpContext, nameof(this.MissionDetail));
+			model.MissionId = id.ToString();
+
+			return View(model);
+		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()

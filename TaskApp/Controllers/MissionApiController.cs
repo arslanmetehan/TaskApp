@@ -48,6 +48,35 @@ namespace TaskApp.Controllers
 			}
 		}
 		[HttpGet]
+		[Route(nameof(GetAllMissions))]
+		public ActionResult<ApiResponse<List<MissionModel>>> GetAllMissions()
+		{
+			try
+			{
+				
+				var missions = this._missionService.GetAll().ToList();
+				var users = this._userService.GetAllUsers();
+				foreach(UserModel user in users)
+				{
+					for(int i=0; i<missions.Count;i++)
+					{
+						if(user.Id == missions[i].UserId)
+						{
+							missions[i].MissionUsername = user.Username;
+						}
+					}
+				}
+
+				var response = ApiResponse<List<MissionModel>>.WithSuccess(missions);
+
+				return Json(response);
+			}
+			catch (Exception exp)
+			{
+				return Json(ApiResponse<List<MissionModel>>.WithError(exp.ToString()));
+			}
+		}
+		[HttpGet]
 		[Route(nameof(GetCurrentMissionOperations))]
 		public ActionResult<ApiResponse<List<OperationModel>>> GetCurrentMissionOperations()
 		{
@@ -70,6 +99,10 @@ namespace TaskApp.Controllers
 		{
 			try
 			{
+				if(model.MissionName == null || model.MissionName == "")
+				{
+					return Json(ApiResponse<UserModel>.WithError("Mission name is required !"));
+				}
 				MissionModel result = null;
 				var user = this._userService.GetOnlineUser(this.HttpContext);
 				var newMission = new Mission();
@@ -93,7 +126,10 @@ namespace TaskApp.Controllers
 		{
 			try
 			{
-				
+				if (model.OperationContent == null || model.OperationContent == "")
+				{
+					return Json(ApiResponse<UserModel>.WithError("Operation name is required !"));
+				}
 				var operations = this._operationService.GetAll();
 				int operationCount = 0;
 				foreach (OperationModel operation in operations)

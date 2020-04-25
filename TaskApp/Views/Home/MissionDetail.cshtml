@@ -1,13 +1,10 @@
 ﻿@model MissionDetailViewModel
 <!-- [AT]Html.AntiForgeryToken() -->
-<script type="text/javascript" src="~/js/Pages/User.MyOperations.js"></script>
+<script type="text/javascript" src="~/js/Pages/Home.Operations.js"></script>
 <link rel="stylesheet" href="~/css/mymissiondetail.css" />
+<h3>Operation Content</h3>
 <div style="margin-bottom:60px;">
-    <div><h3>Add New Operation</h3></div>
     <input type="hidden" id="missionid" value="@Model.MissionId" />
-    <div>Operation Content:</div>
-    <div><input type="text" id="operation-create-operationcontent" /></div>
-    <div><button id="operation-create-btn">Add Operation</button></div>
 </div>
 <div id="error" style="margin-bottom:60px;display:none;"></div>
 <div id="operation-list" style="margin-bottom:60px;"></div>
