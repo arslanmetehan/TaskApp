@@ -1,9 +1,8 @@
 ﻿@model BaseViewModel
-<!-- [AT]Html.AntiForgeryToken() -->
-<script type="text/javascript" src="~/js/Pages/User.Register.js"></script>
-<h1>Index</h1>
+<script type="text/javascript" src="~/js/Pages/User.MyProfile.js"></script>
+<link rel="stylesheet" href="~/css/myprofile.css" />
 <div style="margin-bottom:60px;">
-    <div><h3>Add New User</h3></div>
+    <div><h3>My Profile</h3></div>
     <div>Username:</div>
     <div><input type="text" id="user-create-username" /></div>
     <div>Email:</div>
@@ -12,7 +11,13 @@
     <div><input type="password" id="user-create-password" /></div>
     <div>Birth Year:</div>
     <div><input type="text" id="user-create-birthyear" /></div>
-    <div><button id="user-create-btn">Add User</button></div>
+    <div><button id="user-create-btn">Update User</button></div>
+    <div class="myprofile-title">Username</div>
+    <div class="myprofile-info" id="username"></div>
+    <div class="myprofile-title">Email</div>
+    <div class="myprofile-info" id="email"></div>
+    <div class="myprofile-title">Birth Year</div>
+    <div class="myprofile-info" id="birth"></div>
 </div>
 <div id="error" style="margin-bottom:60px;display:none;"></div>
 <div id="user-list" style="margin-bottom:60px;"></div>

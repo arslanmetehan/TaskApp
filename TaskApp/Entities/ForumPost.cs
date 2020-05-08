@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace TaskApp.Entities
 {
-    public class User
+    public class ForumPost
     {
         [Key]
         public int Id { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Email { get; set; }
-        public int BirthYear { get; set; }
-    }
+        public string PostContent { get; set; }
+        public int UserId { get; set; }
+    
+    }   
 }

@@ -1,0 +1,12 @@
+﻿@model BaseViewModel
+<!-- [AT]Html.AntiForgeryToken() -->
+<script type="text/javascript" src="~/js/Pages/Forum.Post.js"></script>
+<link rel="stylesheet" href="~/css/forumpost.css" />
+<div style="margin-bottom:60px;">
+    <input type="hidden" id="onlineUser" value="@Model.OnlineUser"/>
+    <div><h3>Add New Post</h3></div>
+    <div><input type="text" id="post-create-postcontent" /></div>
+    <div><button id="post-create-btn">Add Post</button></div>
+</div>
+<div id="error" style="margin-bottom:60px;display:none;"></div>
+<div id="post-list" style="margin-bottom:60px;"></div>

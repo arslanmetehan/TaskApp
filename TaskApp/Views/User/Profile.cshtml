@@ -1,0 +1,15 @@
+﻿@model UserViewModel
+<!-- [AT]Html.AntiForgeryToken() -->
+<script type="text/javascript" src="~/js/Pages/User.Profile.js"></script>
+<div style="margin-bottom:60px;">
+    <div><h3 id="users-title">USERS</h3></div>
+    <div><h2>@Model.Username</h2></div>
+    <div id="profile-owner"></div>
+    <input type="hidden" id="userid" value="@Model.UserId" />
+    <input type="hidden" id="onlineUserId" value="@Model.OnlineUser" />
+
+</div>
+<div id="error" style="margin-bottom:60px;display:none;"></div>
+<div id="user-list" style="margin-bottom:60px;"></div>
+<div id="follower-users"><h5>Followers</h5></div>
+<div id="target-users"><h5>Targets</h5></div>

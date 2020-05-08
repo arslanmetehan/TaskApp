@@ -26,11 +26,14 @@ function tryInsertUser() {
 	let username = document.getElementById("user-create-username").value;
 	let email = document.getElementById("user-create-email").value;
 	let password = document.getElementById("user-create-password").value;
+	let birthyear = document.getElementById("user-create-birthyear").value;
+	let birthYearToInt = parseInt(birthyear);
 
 	let data = {
 		Username: username,
 		Email: email,
 		Password: password,
+		BirthYear: birthYearToInt,
 	};
 
 	httpRequest("api/User/CreateUser", "POST", data, handleInsertUser, showError.bind(null, "System Error"));

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.SignalR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace TaskApp.Models
 {
-    public class CreateUserModel
+    public class UpdateUserModel
     {
         public string Username { get; set; }
         public string Password { get; set; }
