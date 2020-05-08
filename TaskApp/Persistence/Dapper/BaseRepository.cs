@@ -49,7 +49,8 @@ namespace TaskApp.Persistence.Dapper
 							"Id INTEGER PRIMARY KEY, " +
 							"Username TEXT NOT NULL, " +
 							"Password TEXT NOT NULL, " +
-							"Email TEXT NOT NULL" +
+							"Email TEXT NOT NULL," +
+							"BirthYear INT NOT NULL" +
 						")";
 
 				command = new SQLiteCommand(sql, conn);
@@ -64,8 +65,7 @@ namespace TaskApp.Persistence.Dapper
 				sql = "create table Mission (" +
 							"Id INTEGER PRIMARY KEY, " +
 							"MissionName TEXT NOT NULL," +
-							"UserId INTEGER NOT NULL," +
-							"Username TEXT NOT NULL" +
+							"UserId INTEGER NOT NULL" +
 						")";
 
 				command = new SQLiteCommand(sql, conn);
@@ -80,6 +80,7 @@ namespace TaskApp.Persistence.Dapper
 				sql = "create table Operation (" +
 							"Id INTEGER PRIMARY KEY, " +
 							"OperationContent TEXT NOT NULL," +
+							"OperationStatus INT NOT NULL," +
 							"MissionId INTEGER NOT NULL" +
 						")";
 
@@ -96,6 +97,33 @@ namespace TaskApp.Persistence.Dapper
 							"Type INTEGER NOT NULL, " +
 							"Message TEXT, " +
 							"Timestamp INTEGER" +
+						")";
+
+				command = new SQLiteCommand(sql, conn);
+				command.ExecuteNonQuery();
+			}
+			sql = "SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'Follow'";
+			command = new SQLiteCommand(sql, conn);
+			count = Convert.ToInt32(command.ExecuteScalar());
+			if (count == 0)
+			{
+				sql = "create table Follow (" +
+							"FollowerUserId INT NOT NULL, " +
+							"TargetUserId INT NOT NULL" +
+						")";
+
+				command = new SQLiteCommand(sql, conn);
+				command.ExecuteNonQuery();
+			}
+			sql = "SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'ForumPost'";
+			command = new SQLiteCommand(sql, conn);
+			count = Convert.ToInt32(command.ExecuteScalar());
+			if (count == 0)
+			{
+				sql = "create table ForumPost (" +
+							"Id INTEGER PRIMARY KEY, " +
+							"PostContent TEXT NOT NULL," +
+							"UserId INTEGER NOT NULL" +
 						")";
 
 				command = new SQLiteCommand(sql, conn);

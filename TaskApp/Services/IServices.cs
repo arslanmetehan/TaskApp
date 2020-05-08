@@ -10,6 +10,7 @@ namespace TaskApp.Services
         IUserService UserService { get; }
         IMissionService MissionService { get; }
         IOperationService OperationService { get; }
+        IForumPostService ForumPostService { get; }
         IViewService ViewService { get; }
     }
 }

@@ -1,0 +1,10 @@
+﻿@model BaseViewModel
+<!-- [AT]Html.AntiForgeryToken() -->
+<script type="text/javascript" src="~/js/Pages/User.List.js"></script>
+<link rel="stylesheet" href="~/css/userlist.css" />
+<div style="margin-bottom:60px;">
+    <div><h3>USERS</h3></div>
+    <input type="hidden" id="onlineUserId" value="@Model.OnlineUser"/>
+</div>
+<div id="error" style="margin-bottom:60px;display:none;"></div>
+<div id="user-list" style="margin-bottom:60px;"></div>

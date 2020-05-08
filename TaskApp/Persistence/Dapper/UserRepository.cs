@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using TaskApp.Entities;
 using TaskApp.Models;
@@ -15,7 +16,7 @@ namespace TaskApp.Persistence.Dapper
         {
             using (IDbConnection dbConnection = this.OpenConnection())
             {
-                dbConnection.Execute("INSERT INTO User (Username, Password, Email) VALUES(@Username, @Password, @Email)", user);
+                dbConnection.Execute("INSERT INTO User (Username, Password, Email, BirthYear) VALUES(@Username, @Password, @Email, @BirthYear)", user);
                 user.Id = dbConnection.ExecuteScalar<int>("SELECT last_insert_rowid()");
             }
         }
@@ -26,12 +27,74 @@ namespace TaskApp.Persistence.Dapper
                 dbConnection.Execute("DELETE FROM User WHERE Id = @Id", new { Id = id });
             }
         }
+        public void UpdateUser(User user)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+                dbConnection.Query("UPDATE User SET Username = @Username, Password = @Password, Email = @Email, BirthYear = @BirthYear WHERE Id = @Id" , user);
+            }
+        }
+        public void FollowTargetUser(int followerId, int targetId)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+                dbConnection.Execute("INSERT INTO Follow (FollowerUserId, TargetUserId) VALUES("+followerId+" , "+targetId+")", new { FollowerUserId = followerId, TargetUserId = targetId });
+               
+            }
+        }
+        public void UnfollowTargetUser(int followerId, int targetId)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+                dbConnection.Execute("DELETE From Follow WHERE FollowerUserId = "+followerId+" AND TargetUserId = "+targetId+"", new { FollowerUserId = followerId, TargetUserId = targetId });
+            }
+        }
 
         public IEnumerable<UserModel> GetAll()
         {
             using (IDbConnection dbConnection = this.OpenConnection())
             {
-                return dbConnection.Query<UserModel>("SELECT u.*, m.UserId as Id FROM User u, Mission m WHERE u.Id = m.UserId");
+                return dbConnection.Query<UserModel>("SELECT * FROM User");
+            }
+        }
+        public IEnumerable<UserModel> GetTargetUsersByOnlineUserId(int onlineUserId)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+                //return dbConnection.Query<UserModel>("SELECT * FROM User");
+                return dbConnection.Query<UserModel>("SELECT u.* FROM User u, Follow f WHERE f.FollowerUserId = @OnlineUserId AND u.Id = f.TargetUserId", new { OnlineUserId = onlineUserId });
+            }
+        }
+        public IEnumerable<UserModel> GetTargetUsersById(int userId)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+                //return dbConnection.Query<UserModel>("SELECT * FROM User");
+                return dbConnection.Query<UserModel>("SELECT u.* FROM User u, Follow f WHERE f.FollowerUserId = @OnlineUserId AND u.Id = f.TargetUserId", new { OnlineUserId = userId });
+            }
+        }
+        public IEnumerable<UserModel> GetNotTargetUsersByOnlineUserId(int onlineUserId)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+                //return dbConnection.Query<UserModel>("SELECT * FROM User");
+                return dbConnection.Query<UserModel>("SELECT u.* FROM User u, Follow f WHERE f.FollowerUserId != @OnlineUserId AND u.Id = f.TargetUserId", new { OnlineUserId = onlineUserId });
+            }
+        }
+        public IEnumerable<UserModel> GetFollowerUsersByOnlineUserId(int onlineUserId)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+                //return dbConnection.Query<UserModel>("SELECT * FROM User");
+                return dbConnection.Query<UserModel>("SELECT u.* FROM User u, Follow f WHERE f.TargetUserId = @OnlineUserId AND u.Id = f.FollowerUserId", new { OnlineUserId = onlineUserId });
+            }
+        }
+        public IEnumerable<UserModel> GetFollowerUsersById(int userId)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+                //return dbConnection.Query<UserModel>("SELECT * FROM User");
+                return dbConnection.Query<UserModel>("SELECT u.* FROM User u, Follow f WHERE f.TargetUserId = @OnlineUserId AND u.Id = f.FollowerUserId", new { OnlineUserId = userId });
             }
         }
 

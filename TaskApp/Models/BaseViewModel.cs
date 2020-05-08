@@ -8,7 +8,6 @@ namespace TaskApp.Models
     public class BaseViewModel
     {
         public string PageTitle { get; set; }
-
         public UserModel OnlineUser { get; set; }
     }
 }

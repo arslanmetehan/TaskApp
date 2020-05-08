@@ -1,0 +1,50 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+.mission-box
+{
+    margin-bottom:30px;
+    width:65%;
+}
+.mission-name
+{
+    float:left;
+    font-size:19px;
+    padding-right:40px;
+    min-width:250px;
+}
+.user-name {
+    float: left;
+    font-size: 15px;
+    line-height: 32px;
+    padding-right: 20px;
+    color: #ff0000;
+    min-width: 150px;
+}
+.mission-btn
+{
+    float:right;
+    border:0px;
+    line-height:35px;
+    box-sizing:content-box;
+    border-radius:5px;
+    color:#ff6a00;
+    margin-right:30px;
+}
+.mission-list-table {
+    margin-bottom: 20px;
+    width: 65%;
+}
+.table-column
+{
+   
+}
+.table-column-1 {
+    min-width: 250px;
+    padding-right: 40px;
+    float: left;
+}
+.table-column-2 {
+    min-width: 150px;
+    padding-right: 20px;
+    float: left;
+}

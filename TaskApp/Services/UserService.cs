@@ -34,6 +34,24 @@ namespace TaskApp.Services
             this._userRepository.Delete(id);
             this._logRepository.Log(Enums.LogType.Info, $"Deleted User : {user.Username}");
         }
+        public void UpdateUser(User user)
+        {
+        
+            this._userRepository.UpdateUser(user);
+        
+        }
+        public void FollowAnotherUser(int followerId, int targetId)
+        {
+            var user = this._userRepository.GetById(followerId);
+            this._userRepository.FollowTargetUser(followerId, targetId);
+            this._logRepository.Log(Enums.LogType.Info, $"Follower User : {user.Username}");
+        }
+        public void UnFollowAnotherUser(int followerId, int targetId)
+        {
+            var user = this._userRepository.GetById(followerId);
+            this._userRepository.UnfollowTargetUser(followerId, targetId);
+            this._logRepository.Log(Enums.LogType.Info, $"Follower User : {user.Username}");
+        }
         public UserModel GetById(int id)
         {
             return this._userRepository.GetById(id);
@@ -41,12 +59,48 @@ namespace TaskApp.Services
         public List<UserModel> GetAllUsers()
         {
             var users = this._userRepository.GetAll().ToList();
-           /* var missions = this._missionRepository.GetAll().Select(mission => new MissionModel(mission)).ToList();
+            /* var missions = this._missionRepository.GetAll().Select(mission => new MissionModel(mission)).ToList();
 
-            users.ForEach(u =>
-            {
-                u.GroupName = missions.FirstOrDefault(ug => ug.Id == u.GroupId)?.Name;
-            });*/
+             users.ForEach(u =>
+             {
+                 u.Username = missions.FirstOrDefault(m => m.UserId == u.Id)?.Name;
+                 m.MissionUsername = users.FirstOrDefault(m => m.UserId == u.Id)?.Name;
+             });*/
+
+            return users;
+        }
+        public List<UserModel> GetTargetUsersByOnlineUserId(int onlineUserId)
+        {
+            var users = this._userRepository.GetTargetUsersByOnlineUserId(onlineUserId).ToList();
+ 
+
+            return users;
+        }
+        public List<UserModel> GetTargetUsersById(int userId)
+        {
+            var users = this._userRepository.GetTargetUsersById(userId).ToList();
+
+
+            return users;
+        }
+        public List<UserModel> GetNotTargetUsersByOnlineUserId(int onlineUserId)
+        {
+            var users = this._userRepository.GetNotTargetUsersByOnlineUserId(onlineUserId).ToList();
+
+
+            return users;
+        }
+        public List<UserModel> GetFollowerUsersByOnlineUserId(int onlineUserId)
+        {
+            var users = this._userRepository.GetFollowerUsersByOnlineUserId(onlineUserId).ToList();
+
+
+            return users;
+        }
+        public List<UserModel> GetFollowerUsersById(int userId)
+        {
+            var users = this._userRepository.GetFollowerUsersById(userId).ToList();
+
 
             return users;
         }

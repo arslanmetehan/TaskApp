@@ -17,7 +17,7 @@ namespace TaskApp.Persistence.Dapper
         
             using (IDbConnection dbConnection = this.OpenConnection())
             {
-                dbConnection.Execute("INSERT INTO Operation (OperationContent, MissionId) VALUES(@OperationContent, @MissionId)", operation);
+                dbConnection.Execute("INSERT INTO Operation (OperationContent, OperationStatus, MissionId) VALUES(@OperationContent, @OperationStatus, @MissionId)", operation);
                 operation.Id = dbConnection.ExecuteScalar<int>("SELECT last_insert_rowid()");
             }
             
@@ -34,7 +34,8 @@ namespace TaskApp.Persistence.Dapper
         {
             using (IDbConnection dbConnection = this.OpenConnection())
             {
-                return dbConnection.Query<OperationModel>("SELECT o.*, o.MissionId as m.Id FROM Operation o, Mission m WHERE m.Id = o.MissionId");
+                //return dbConnection.Query<OperationModel>("SELECT o.*, o.MissionId as Id FROM Mission m, Mission m WHERE o.MissionId = m.Id");
+                return dbConnection.Query<OperationModel>("SELECT * FROM Operation");
             }
         }
 
@@ -42,10 +43,33 @@ namespace TaskApp.Persistence.Dapper
         {
             using (IDbConnection dbConnection = this.OpenConnection())
             {
-                return dbConnection.QuerySingle<OperationModel>("SELECT o.*, o.MissionId as Id FROM Mission m, Mission m WHERE o.MissionId = m.Id AND o.Id = @Id", new { Id = id });
+                //return dbConnection.QuerySingle<OperationModel>("SELECT * FROM Operation WHERE Id = @Id");
+                return dbConnection.QuerySingle<OperationModel>("SELECT o.*, m.Id as MissionId FROM Operation o, Mission m WHERE m.Id = o.MissionId AND o.Id = @Id", new { Id = id });
+            }
+        }
+        public OperationModel GetByOptId(int id)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+                //return dbConnection.QuerySingle<OperationModel>("SELECT * FROM Operation WHERE Id = @Id");
+                return dbConnection.QuerySingle<OperationModel>("SELECT * FROM Operation WHERE Id = @Id", new { Id = id });
+            }
+        }
+        public IEnumerable<Operation> GetByMissionId(int missionId)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+                return dbConnection.Query<Operation>("SELECT * FROM Operation WHERE MissionId = @MissionId", new { MissionId = missionId });
+            }
+        }
+        public void UpdateOperationById(int id)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+                dbConnection.Execute("UPDATE Operation SET OperationStatus = 1 WHERE Id = @Id", new { Id = id });
             }
         }
 
-      
+
     }
 }

@@ -6,6 +6,7 @@ using TaskApp.Entities;
 using TaskApp.Models;
 using TaskApp.Persistence;
 using TaskApp.Services;
+using TaskApp.Helpers;
 
 namespace TaskApp.Services
 {
@@ -37,9 +38,9 @@ namespace TaskApp.Services
 
         public MissionModel GetById(int id)
         {
-            throw new NotImplementedException();
+            return this._missionRepository.GetById(id);
         }
-        IEnumerable<MissionModel> IMissionService.GetByMissionId()
+        /*List<MissionModel> IMissionService.GetByMissionId()
         {
             var users = this._userRepository.GetAll().ToList();
             var missions = this._missionRepository.GetAllMissions().ToList();
@@ -48,12 +49,35 @@ namespace TaskApp.Services
             {
                 u.Username = missions.FirstOrDefault(ug => ug.Id == u.GroupId)?.Name;
                 
-            });*/
-            missions.ForEach(m =>
+            });
+           /* missions.ForEach(m =>
             {
                 m.MissionUsername = users.FirstOrDefault(u => u.Id == m.UserId)?.Username;
 
             });
+
+            return missions;
+        }*/
+        List<MissionModel> IMissionService.GetMissionsByUserId(int userId)
+        {
+            return this._missionRepository.GetByUserId(userId).Select(article => new MissionModel(article)).ToList();
+        }
+        public IEnumerable<MissionModel> GetAll()
+        {
+            return this._missionRepository.GetAllMissions().ToList();
+        }
+        List<MissionModel> IMissionService.GetAllMyMissionsByUserId(int userId)
+        {
+           
+            
+            var missions = this._missionRepository.GetMissionsByUserId(userId).ToList();
+
+
+            /*foreach (var mission in missions)
+            {
+                
+                mission.MissionUsername = user.Username;
+            }*/
 
             return missions;
         }

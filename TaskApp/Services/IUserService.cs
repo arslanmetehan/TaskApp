@@ -12,10 +12,18 @@ namespace TaskApp.Services
     {
 		void AddNewUser(User user);
 		void Delete(int id);
+		void UpdateUser(User user);
 		UserModel GetById(int id);
 		void Logout(HttpContext httpContext);
 		bool TryLogin(UserLoginModel loginData, HttpContext httpContext);
 		UserModel GetOnlineUser(HttpContext httpContext);
 		List<UserModel> GetAllUsers();
+		void FollowAnotherUser(int followerId,int targerId);
+		void UnFollowAnotherUser(int followerId, int targetId);
+		List<UserModel> GetTargetUsersByOnlineUserId(int onlineUserId);
+		List<UserModel> GetFollowerUsersByOnlineUserId(int onlineUserId);
+		List<UserModel> GetTargetUsersById(int userId);
+		List<UserModel> GetFollowerUsersById(int userId);
+		List<UserModel> GetNotTargetUsersByOnlineUserId(int onlineUserId);
 	}
 }

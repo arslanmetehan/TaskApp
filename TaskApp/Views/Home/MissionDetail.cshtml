@@ -1,0 +1,10 @@
+﻿@model MissionDetailViewModel
+<!-- [AT]Html.AntiForgeryToken() -->
+<script type="text/javascript" src="~/js/Pages/Home.Operations.js"></script>
+<link rel="stylesheet" href="~/css/mymissiondetail.css" />
+<h3>Operation Content</h3>
+<div style="margin-bottom:60px;">
+    <input type="hidden" id="missionid" value="@Model.MissionId" />
+</div>
+<div id="error" style="margin-bottom:60px;display:none;"></div>
+<div id="operation-list" style="margin-bottom:60px;"></div>

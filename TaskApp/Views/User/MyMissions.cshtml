@@ -1,0 +1,13 @@
+﻿@model BaseViewModel
+<!-- [AT]Html.AntiForgeryToken() -->
+<script type="text/javascript" src="~/js/Pages/User.MyMissions.js"></script>
+<link rel="stylesheet" href="~/css/mymissiondetail.css" />
+<link rel="stylesheet" href="~/css/home.css" />
+<div style="margin-bottom:60px;">
+    <div><h3>Add New Mission</h3></div>
+    <div>Mission Name:</div>
+    <div><input type="text" id="mission-create-missionname" /></div>
+    <div><button id="mission-create-btn">Add Mission</button></div>
+</div>
+<div id="error" style="margin-bottom:60px;display:none;"></div>
+<div class="clearfix" id="mission-list" style="margin-bottom:60px;"></div>
