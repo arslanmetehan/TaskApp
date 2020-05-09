@@ -65,7 +65,6 @@ function handleGetFollowerUsers(response) {
 	for (let i = 0; i < page.users.length; i++) {
 		let user = page.users[i];
 
-
 		appendUser(user);
 	}
 }

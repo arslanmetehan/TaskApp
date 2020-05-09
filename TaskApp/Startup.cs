@@ -51,6 +51,7 @@ namespace TaskApp
             services.AddSingleton<IForumPostRepository, Persistence.Dapper.ForumPostRepository>();
             services.AddSingleton<IMissionRepository, Persistence.Dapper.MissionRepository>();
             services.AddSingleton<IOperationRepository, Persistence.Dapper.OperationRepository>();
+            services.AddSingleton<IDirectMessageRepository, Persistence.Dapper.DirectMessageRepository>();
             services.AddSingleton<ILogRepository, Persistence.Dapper.LogRepository>();
 
 
@@ -59,6 +60,7 @@ namespace TaskApp
             services.AddSingleton<IOperationService, OperationService>();
             services.AddSingleton<IViewService, ViewService>();
             services.AddSingleton<IForumPostService, ForumPostService>();
+            services.AddSingleton<IDirectMessageService, DirectMessageService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

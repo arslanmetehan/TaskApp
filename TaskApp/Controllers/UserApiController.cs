@@ -20,12 +20,15 @@ namespace TaskApp.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMissionService _missionService;
+		private readonly IDirectMessageService _directMessageService;
 
-        public UserApiController(IUserService userService, IMissionService missionService)
+        public UserApiController(IUserService userService, IMissionService missionService, IDirectMessageService directMessageService)
         {
             _userService = userService;
             _missionService = missionService;
-        }
+			_directMessageService = directMessageService;
+
+		}
         [HttpGet]
 		[Route(nameof(GetActiveUsers))]
 		public ActionResult<ApiResponse<List<UserModel>>> GetActiveUsers()
@@ -367,6 +370,53 @@ namespace TaskApp.Controllers
 				var user = this._userService.GetOnlineUser(this.HttpContext);
 
 				return Json(ApiResponse<UserModel>.WithSuccess(user));
+			}
+			catch (Exception exp)
+			{
+				return Json(ApiResponse<UserModel>.WithError(exp.ToString()));
+			}
+		}
+		[HttpGet]
+		[Route(nameof(GetMessages))]
+		public ActionResult<ApiResponse<List<DirectMessageModel>>> GetMessages(int receiverId)
+		{
+			try
+			{
+
+
+				var user = this._userService.GetOnlineUser(this.HttpContext);
+				int senderId = user.Id;
+				var messages = this._directMessageService.GetMessagesBySenderAndReceiverId(senderId, receiverId);
+
+
+
+				var response = ApiResponse<List<DirectMessageModel>>.WithSuccess(messages);
+
+				return Json(response);
+			}
+			catch (Exception exp)
+			{
+				return Json(ApiResponse<List<UserModel>>.WithError(exp.ToString()));
+			}
+		}
+		[HttpPost]
+		[Route(nameof(CreateMessage))]
+		public ActionResult<ApiResponse<DirectMessageModel>> CreateMessage([FromBody]CreateDirectMessageModel model)
+		{
+			try
+			{
+
+				DirectMessageModel result = null;
+
+				var newMessage = new DirectMessage();
+				newMessage.SenderId = Convert.ToInt32(model.SenderId);
+				newMessage.ReceiverId = Convert.ToInt32(model.ReceiverId);
+				newMessage.MessageContent = model.MessageContent;
+				
+				this._directMessageService.AddNewMessage(newMessage);
+				result = this._directMessageService.GetById(newMessage.Id);
+
+				return Json(ApiResponse<DirectMessageModel>.WithSuccess(result));
 			}
 			catch (Exception exp)
 			{

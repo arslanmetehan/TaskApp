@@ -75,6 +75,11 @@ namespace TaskApp.Controllers
             var model = this.services.ViewService.CreateViewModel<MissionDetailViewModel>(this.HttpContext, nameof(this.NewsFeed));
             return View(model);
         }
+        public ActionResult DirectMessage()
+        {
+            var model = this.services.ViewService.CreateViewModel<BaseViewModel>(this.HttpContext, nameof(this.DirectMessage));
+            return View(model);
+        }
 
         public IActionResult Logout()
         {

@@ -50,7 +50,7 @@ function handleGetPosts(response) {
 	}
 	let onlineUser = document.getElementById("onlineUser").value;
 	page.posts = response.Data;
-	for (let i = 0; i < page.posts.length; i++) {
+	for (let i = page.posts.length-1; i >= 0; i--) {
 		let post = page.posts[i];
 		if (post.UserId == OnlineUser.Id) {
 			appendPost(post);
