@@ -35,6 +35,11 @@ namespace TaskApp.Services
             this._directMessageRepository.Delete(id);
             this._logRepository.Log(Enums.LogType.Info, $"Deleted Message : {message.MessageContent}");
         }
+        public void UpdateMessage(DirectMessage message)
+        {
+
+            this._directMessageRepository.UpdateMessage(message);
+        }
 
         public DirectMessageModel GetById(int id)
         {
@@ -51,6 +56,14 @@ namespace TaskApp.Services
         List<DirectMessageModel> IDirectMessageService.GetMessagesBySenderAndReceiverId(int senderId,int receiverId)
         {
             return this._directMessageRepository.GetBySenderAndReceiverId(senderId,receiverId).ToList();
+        }
+        DirectMessageModel IDirectMessageService.GetLastMessageBySenderAndReceiverId(int senderId, int receiverId)
+        {
+            return this._directMessageRepository.GetLastMessage(senderId, receiverId);
+        }
+        List<DirectMessageModel> IDirectMessageService.GetNewMessages(int lastMessageId, int senderId, int receiverId)
+        {
+            return this._directMessageRepository.GetNewMessages(lastMessageId,senderId, receiverId).ToList();
         }
     }
 }

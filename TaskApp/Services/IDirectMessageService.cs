@@ -12,9 +12,14 @@ namespace TaskApp.Services
     {
 		void AddNewMessage(DirectMessage message);
 		void Delete(int id);
+		void UpdateMessage(DirectMessage message);
 		DirectMessageModel GetById(int id);
 		List<DirectMessageModel> GetMessagesBySenderId(int senderId);
 		List<DirectMessageModel> GetMessagesByReceiverId(int receiverId);
 		List<DirectMessageModel> GetMessagesBySenderAndReceiverId(int senderId, int receiverId);
+		DirectMessageModel GetLastMessageBySenderAndReceiverId(int senderId, int receiverId);
+		List<DirectMessageModel> GetNewMessages(int lastMessageId,int senderId, int receiverId);
+
+
 	}
 }

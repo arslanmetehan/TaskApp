@@ -19,6 +19,20 @@ namespace TaskApp.Helpers
 				Email = userModel.Email,
 			};
 		}
+		public static DirectMessage ToEntity(this DirectMessageModel messageModel)
+		{
+			return new DirectMessage()
+			{
+				Id = messageModel.Id,
+				MessageContent = messageModel.MessageContent,
+				SenderId = messageModel.SenderId,
+				ReceiverId = messageModel.ReceiverId,
+			};
+		}
+		public static DirectMessageModel ToModel(this DirectMessage messageModel)
+		{
+			return new DirectMessageModel(messageModel);
+		}
 		public static UserModel ToModel(this User user)
 		{
 			return new UserModel(user);

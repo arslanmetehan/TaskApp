@@ -138,7 +138,8 @@ namespace TaskApp.Persistence.Dapper
 							"Id INTEGER PRIMARY KEY, " +
 							"SenderId INT NOT NULL, " +
 							"ReceiverId INT NOT NULL, " +
-							"MessageContent TEXT NOT NULL" +
+							"MessageContent TEXT NOT NULL, " +
+							"IsDeleted INT NOT NULL" +
 						")";
 
 				command = new SQLiteCommand(sql, conn);

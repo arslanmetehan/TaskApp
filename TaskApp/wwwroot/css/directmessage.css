@@ -21,14 +21,40 @@ for details on configuring this project to bundle and minify static web assets. 
     margin-bottom:20px;
   
 }
-.onlineUserMessage
-{
-   color:#ff6a00;
-   margin-bottom:15px;
+.onlineUserMessage {
+    color: #ff6a00;
+    margin-bottom: 15px;
+   
+    padding-left: 300px;
 }
 .otherUserMessage {
     margin-bottom: 15px;
-    padding-left: 300px;
+    padding-left: 20px;
+    color: blue;
+    font-weight: bold;
+}
+.deleted-message
+{
+    color:#0026ff;
+    font-style:italic;
+    font-size:10px;
+}
+.currently-message-box
+{
+    position:relative;
+    border:1px solid black;
+    margin-bottom:20px;
+    min-height:50px;
+    margin-top:20px;
+    max-width:600px;
+
+}
+.chatting-username
+{
+    position:absolute;
+    right:5%;
+    bottom:5%;
+    font-style:italic;
 }
 
 

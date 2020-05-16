@@ -15,7 +15,7 @@ namespace TaskApp.Persistence.Dapper
         {
             using (IDbConnection dbConnection = this.OpenConnection())
             {
-                dbConnection.Execute("INSERT INTO DirectMessage (SenderId, receiverId, MessageContent) VALUES(@SenderId, @receiverId, @MessageContent)", message);
+                dbConnection.Execute("INSERT INTO DirectMessage (SenderId, receiverId, MessageContent, IsDeleted) VALUES(@SenderId, @receiverId, @MessageContent, @IsDeleted)", message);
                 message.Id = dbConnection.ExecuteScalar<int>("SELECT last_insert_rowid()");
             }
         }
@@ -24,6 +24,14 @@ namespace TaskApp.Persistence.Dapper
             using (IDbConnection dbConnection = this.OpenConnection())
             {
                 dbConnection.Execute("DELETE FROM DirectMessage WHERE Id = @Id", new { Id = id });
+                //dbConnection.Query("UPDATE DirectMessage SET MessageContent = @MessageContent  WHERE Id = @Id", user);
+            }
+        }
+        public void UpdateMessage(DirectMessage message)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+                dbConnection.Query("UPDATE DirectMessage SET MessageContent = @MessageContent, IsDeleted = 1 WHERE Id = @Id", message);
             }
         }
         public DirectMessageModel GetById(int id)
@@ -56,6 +64,22 @@ namespace TaskApp.Persistence.Dapper
             {
 
                 return dbConnection.Query<DirectMessageModel>("SELECT * FROM DirectMessage WHERE SenderId = @SenderId AND ReceiverId = @ReceiverId OR SenderId = @ReceiverId AND ReceiverId = @SenderId ORDER BY Id ASC", new { SenderId = senderId, ReceiverId = receiverId });
+            }
+        }
+        public DirectMessageModel GetLastMessage(int senderId, int receiverId)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+
+                return dbConnection.QuerySingle<DirectMessageModel>("SELECT * FROM DirectMessage WHERE SenderId = @ReceiverId AND ReceiverId = @SenderId ORDER BY Id DESC LIMIT 1", new { SenderId = senderId, ReceiverId = receiverId });
+            }
+        }
+        public IEnumerable<DirectMessageModel> GetNewMessages(int lastMessageId,int senderId, int receiverId)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+
+                return dbConnection.Query<DirectMessageModel>("SELECT * FROM DirectMessage WHERE SenderId = @SenderId AND ReceiverId = @ReceiverId AND Id > @LastMessageId ORDER BY Id ASC", new { SenderId = senderId, ReceiverId = receiverId, LastMessageId = lastMessageId });
             }
         }
     }

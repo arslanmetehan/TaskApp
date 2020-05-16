@@ -94,3 +94,8 @@ function redirect(url) {
 
 	window.location.href = baseUrl + url;
 }
+function generateHref(url) {
+	var baseUrl = getBaseUrl();
+
+	return baseUrl + url;
+}
