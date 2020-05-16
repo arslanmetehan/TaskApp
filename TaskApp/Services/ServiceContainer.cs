@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TaskApp.Persistence;
 
 namespace TaskApp.Services
 {
@@ -13,6 +14,7 @@ namespace TaskApp.Services
 		private readonly Lazy<IMissionService> missionService;
 		private readonly Lazy<IOperationService> operationService;
 		private readonly Lazy<IForumPostService> forumPostService;
+		private readonly Lazy<IDirectMessageRepository> directMessageService;
 		private readonly Lazy<IViewService> viewService;
 		public ServiceContainer(IServiceProvider provider)
 		{
@@ -22,6 +24,7 @@ namespace TaskApp.Services
 			forumPostService = new Lazy<IForumPostService>(() => Resolve<IForumPostService>());
 			missionService = new Lazy<IMissionService>(() => Resolve<IMissionService>());
 			operationService = new Lazy<IOperationService>(() => Resolve<IOperationService>());
+			directMessageService = new Lazy<IDirectMessageRepository>(() => Resolve<IDirectMessageRepository>());
 			viewService = new Lazy<IViewService>(() => Resolve<IViewService>());
 		}
 		private TService Resolve<TService>()
@@ -33,6 +36,7 @@ namespace TaskApp.Services
 		public IMissionService MissionService => missionService.Value;
 		public IOperationService OperationService => operationService.Value;
 		public IForumPostService ForumPostService => forumPostService.Value;
+		public IDirectMessageRepository DirectMessageService => directMessageService.Value;
 		public IViewService ViewService => viewService.Value;
 	}
 }

@@ -68,11 +68,24 @@ namespace TaskApp.Controllers
         public IActionResult MyProfile()
         {
             var model = this.services.ViewService.CreateViewModel<BaseViewModel>(this.HttpContext, nameof(this.UserList));
+            if (model.OnlineUser == null)
+            {
+                return RedirectToAction("Login", "User");
+            }
             return View(model);
         }
         public ActionResult NewsFeed()
         {
             var model = this.services.ViewService.CreateViewModel<MissionDetailViewModel>(this.HttpContext, nameof(this.NewsFeed));
+            return View(model);
+        }
+        public ActionResult DirectMessage()
+        {
+            var model = this.services.ViewService.CreateViewModel<BaseViewModel>(this.HttpContext, nameof(this.DirectMessage));
+            if(model.OnlineUser == null)
+            {
+                return RedirectToAction("Login", "User");
+            }
             return View(model);
         }
 

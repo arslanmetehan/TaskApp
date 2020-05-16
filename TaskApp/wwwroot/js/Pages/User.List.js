@@ -65,7 +65,6 @@ function handleGetFollowerUsers(response) {
 	for (let i = 0; i < page.users.length; i++) {
 		let user = page.users[i];
 
-
 		appendUser(user);
 	}
 }
@@ -85,9 +84,9 @@ function handleGetUsers(response) {
 	}
 }
 function appendUser(user) {
+	let userProfileLink = generateHref("User/Profile/##user.Id##");
 	let userTemplate = '<div class="user-box clearfix" id="user-id-##user.Id##">';
-	userTemplate += '<div class="username">##user.Username##</div>';
-	userTemplate += '<div style="margin-bottom:20px;"><button class="profile-btn"  id="user-profile-btn-##user.Id##" onclick="redirectProfileDetails(##user.Id##)">User Profile</button></div>';
+	userTemplate += '<div class="username"><a href="'+userProfileLink+'">##user.Username##</a></div>';
 	userTemplate += '<div style="margin-bottom:20px;"><button class="follow-btn" id="follow-btn-##user.Id##">Follow</button></div>';
 	userTemplate += '</div>';
 
@@ -109,10 +108,11 @@ function appendUser(user) {
 	let profileBtn = document.getElementById("user-profil-btn" + user.Id);
 	
 }
-function appendFollowingUser(user) {
+function appendFollowingUser(user)
+{
+	let userProfileLink = generateHref("User/Profile/##user.Id##");
 	let userTemplate = '<div class="user-box clearfix" id="user-id-##user.Id##">';
-	userTemplate += '<div class="username">##user.Username##</div>';
-	userTemplate += '<div style="margin-bottom:20px;"><button class="profile-btn" id="user-profile-btn-##user.Id##" onclick="redirectProfileDetails(##user.Id##)">User Profile</button></div>';
+	userTemplate += '<div class="username"><a href="' + userProfileLink + '">##user.Username##</a></div>';
 	userTemplate += '<div style="margin-bottom:20px;"><button class="follow-btn" id="unfollow-btn-##user.Id##">Unfollow</button></div>';
 	userTemplate += '</div>';
 
@@ -132,9 +132,9 @@ function appendFollowingUser(user) {
 	unfollowBtn.onclick = tryUnfollowUser.bind(null, user.Id);
 }
 function appendFollowerUser(user) {
+	let userProfileLink = generateHref("User/Profile/##user.Id##");
 	let userTemplate = '<div class="user-box clearfix" id="user-id-##user.Id##">';
-	userTemplate += '<div class="username">##user.Username##</div>';
-	userTemplate += '<div style="margin-bottom:20px;"><button class="profile-btn" id="user-profile-btn-##user.Id##" onclick="redirectProfileDetails(##user.Id##)">User Profile</button></div>';
+	userTemplate += '<div class="username"><a href="' + userProfileLink + '">##user.Username##</a></div>';
 	userTemplate += '<div style="margin-bottom:20px;"><button class="follow-btn" id="unfollow-btn-##user.Id##">Unfollow</button></div>';
 	userTemplate += '</div>';
 
@@ -182,9 +182,9 @@ function handleUnfollowUser(userId, response) {
 	unfollowCheckBtn.innerHTML = "Follow";
 }
 function appendOfflineUser(user) {
+	let userProfileLink = generateHref("User/Profile/##user.Id##");
 	let userTemplate = '<div class="user-box clearfix" id="user-id-##user.Id##">';
-	userTemplate += '<div class="username">##user.Username##</div>';
-	userTemplate += '<div style="margin-bottom:20px;"><button  class="profile-btn" id="user-profile-btn-##user.Id##" onclick="redirectProfileDetails(##user.Id##)">User Profile</button></div>';
+	userTemplate += '<div class="username"><a href="' + userProfileLink + '">##user.Username##</a></div>';
 	userTemplate += '</div>';
 
 	let userHtmlString = userTemplate

@@ -20,12 +20,15 @@ namespace TaskApp.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMissionService _missionService;
+		private readonly IDirectMessageService _directMessageService;
 
-        public UserApiController(IUserService userService, IMissionService missionService)
+        public UserApiController(IUserService userService, IMissionService missionService, IDirectMessageService directMessageService)
         {
             _userService = userService;
             _missionService = missionService;
-        }
+			_directMessageService = directMessageService;
+
+		}
         [HttpGet]
 		[Route(nameof(GetActiveUsers))]
 		public ActionResult<ApiResponse<List<UserModel>>> GetActiveUsers()
@@ -373,6 +376,114 @@ namespace TaskApp.Controllers
 				return Json(ApiResponse<UserModel>.WithError(exp.ToString()));
 			}
 		}
+		[HttpGet]
+		[Route(nameof(GetMessages))]
+		public ActionResult<ApiResponse<List<DirectMessageModel>>> GetMessages(int receiverId)
+		{
+			try
+			{
 
+
+				var user = this._userService.GetOnlineUser(this.HttpContext);
+				int senderId = user.Id;
+				var messages = this._directMessageService.GetMessagesBySenderAndReceiverId(senderId, receiverId);
+
+
+
+				var response = ApiResponse<List<DirectMessageModel>>.WithSuccess(messages);
+
+				return Json(response);
+			}
+			catch (Exception exp)
+			{
+				return Json(ApiResponse<List<UserModel>>.WithError(exp.ToString()));
+			}
+		}
+		[HttpPost]
+		[Route(nameof(CreateMessage))]
+		public ActionResult<ApiResponse<DirectMessageModel>> CreateMessage([FromBody]CreateDirectMessageModel model)
+		{
+			try
+			{
+
+				DirectMessageModel result = null;
+
+				var newMessage = new DirectMessage();
+				newMessage.SenderId = Convert.ToInt32(model.SenderId);
+				newMessage.ReceiverId = Convert.ToInt32(model.ReceiverId);
+				newMessage.MessageContent = model.MessageContent;
+				newMessage.IsDeleted = 0;
+				
+				this._directMessageService.AddNewMessage(newMessage);
+				result = this._directMessageService.GetById(newMessage.Id);
+
+				return Json(ApiResponse<DirectMessageModel>.WithSuccess(result));
+			}
+			catch (Exception exp)
+			{
+				return Json(ApiResponse<UserModel>.WithError(exp.ToString()));
+			}
+		}
+		[HttpDelete]
+		[Route(nameof(DeleteMessage))]
+		public ActionResult<ApiResponse> DeleteMessage([FromBody] int messageId)
+		{
+			try
+			{
+				var user = this._userService.GetOnlineUser(this.HttpContext);
+				if(user == null)
+				{
+					return Json(ApiResponse.WithError("You cant delete this message !"));
+				}
+
+				//this._directMessageService.Delete(messageId);
+				var message = this._directMessageService.GetById(messageId).ToEntity();
+				message.MessageContent = "Bu Mesaj Silindi !";
+				message.IsDeleted = 1;
+				this._directMessageService.UpdateMessage(message);
+
+				return Json(ApiResponse.WithSuccess());
+			}
+			catch (Exception exp)
+			{
+				return Json(ApiResponse.WithError(exp.ToString()));
+			}
+		}
+		[HttpGet]
+		[Route(nameof(GetNewMessages))]
+		public ActionResult<ApiResponse<List<DirectMessageModel>>> GetNewMessages(int lastMessageId)
+		{
+			try
+			{
+
+				if(lastMessageId == -1)
+				{
+					List<DirectMessageModel> emptyMessage = new List<DirectMessageModel>();
+					var response = ApiResponse<List<DirectMessageModel>>.WithSuccess(emptyMessage);
+					return Json(response);
+
+				}
+				else
+				{
+					var user = this._userService.GetOnlineUser(this.HttpContext);
+					int receiverId = user.Id;
+					var message = this._directMessageService.GetById(lastMessageId);
+
+					var messages = this._directMessageService.GetNewMessages(lastMessageId, message.SenderId, receiverId);
+
+
+
+					var response = ApiResponse<List<DirectMessageModel>>.WithSuccess(messages);
+
+					return Json(response);
+
+				}
+
+			}
+			catch (Exception exp)
+			{
+				return Json(ApiResponse<List<UserModel>>.WithError(exp.ToString()));
+			}
+		}
 	}
 }
