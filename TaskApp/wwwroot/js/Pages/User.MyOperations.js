@@ -5,11 +5,11 @@ function main() {
 	let missionId = parseInt(missionIdInput);
 	operationCreateBtn.onclick = tryInsertOperation;
 
-	tryGetOperations();
+	tryGetOperations(missionId);
 }
 
-function tryGetOperations() {
-	httpRequest("api/Mission/GetCurrentMissionOperations", "GET", null, handleGetOperations, showError.bind(null, "System Error"));
+function tryGetOperations(missionId) {
+	httpRequest("api/Mission/GetOperationsByMissionId/?missionId=" + missionId, "GET", null, handleGetOperations, showError.bind(null, "System Error"));
 }
 
 function handleGetOperations(response) {
@@ -17,19 +17,15 @@ function handleGetOperations(response) {
 		showError(response.ErrorMessage);
 		return;
 	}
-	let missionIdInput = parseInt(document.getElementById("missionid").value);
 	page.operations = response.Data;
 	for (let i = 0; i < page.operations.length; i++) {
 		let operation = page.operations[i];
-	
-		if (operation.MissionId == missionIdInput)
-		{
-			appendOperation(operation);
-			if (operation.OperationStatus == 1) {
-				OperationDone(operation.Id);
-			}
+		if (operation.OperationStatus == 1) {
+			appendDoneOperation(operation);
 		}
-		
+		else {
+			appendOperation(operation);
+		}
 	}
 
 }
@@ -61,12 +57,6 @@ function OperationDone(operationId) {
 	let doneOperation = document.getElementById("operation-content-" + operationId);
 	doneOperation.style = "text-decoration: line-through;" +
 		"text-decoration-color: #ff5733;";
-
-	let doneBtn = document.getElementById("operation-done-btn-" + operationId);
-	doneBtn.style = "Display:none;";
-	//let optStatus = document.getElementById("operation-status-" + operationId);
-	//optStatus.value = 1;
-	tryUpdateOperation(operationId);
 }
 function tryUpdateOperation(operationId) {
 	let optId = operationId;
@@ -79,6 +69,8 @@ function tryUpdateOperation(operationId) {
 
 
 	};
+	page.updatedOptId = operationId;
+	OperationDone(operationId);
 	httpRequest("api/Mission/UpdateOperation", "POST", data, handleUpdateOperation, showError.bind(null, "System Error"));
 }
 function handleUpdateOperation(response) {
@@ -86,11 +78,15 @@ function handleUpdateOperation(response) {
 		showError(response.ErrorMessage);
 		return;
 	}
+	
+	let doneBtn = document.getElementById("operation-done-btn-" + page.updatedOptId);
+	doneBtn.parentNode.removeChild(doneBtn);
+	
 }
 function appendOperation(operation) {
 	let operationTemplate = '<div class="operation-box clearfix" id="operation-id-##operation.Id##">';
 	operationTemplate += '<div id="operation-content-##operation.Id##" class="operation-content">##operation.OperationContent##</div>';
-	operationTemplate += '<div><button onclick="OperationDone(##operation.Id##)" class="createBtn" value="##operation.Id##" id="operation-done-btn-##operation.Id##">DONE</button></div>';
+	operationTemplate += '<div><button onclick="tryUpdateOperation(##operation.Id##)" class="createBtn" value="##operation.Id##" id="operation-done-btn-##operation.Id##">DONE</button></div>';
 	operationTemplate += '<input id="operation-status-##operation.Id##" type="hidden" value="##operation.OperationStatus##"/>';
 	operationTemplate += '<div style="margin-bottom:10px;"><button class="createBtn deleteBtn" id="operation-delete-btn-##operation.Id##">Delete Operation</button></div>';
 	operationTemplate += '</div>';
@@ -104,13 +100,32 @@ function appendOperation(operation) {
 
 	let operationListDiv = document.getElementById("operation-list");
 	operationListDiv.appendChild(operationHtml);
-	if (operation.OperationStatus == 1) {
-		OperationDone(operation.Id);
-    }
+
 	let deleteBtn = document.getElementById("operation-delete-btn-" + operation.Id);
 	deleteBtn.onclick = tryDeleteOperation.bind(null, operation.Id);
 }
+function appendDoneOperation(operation) {
+	let operationTemplate = '<div class="operation-box clearfix" id="operation-id-##operation.Id##">';
+	operationTemplate += '<div id="operation-content-##operation.Id##" class="operation-content">##operation.OperationContent##</div>';
+	operationTemplate += '<input id="operation-status-##operation.Id##" type="hidden" value="##operation.OperationStatus##"/>';
+	operationTemplate += '<div style="margin-bottom:10px;"><button class="createBtn deleteBtn" id="operation-delete-btn-##operation.Id##">Delete Operation</button></div>';
+	operationTemplate += '</div>';
 
+	let operationHtmlString = operationTemplate
+		.split("##operation.Id##").join(operation.Id)//.replace("##user.Id##", userModel.Id)
+		.split("##operation.OperationStatus##").join(operation.OperationStatus)//.replace("##user.Id##", userModel.Id)
+		.split("##operation.OperationContent##").join(operation.OperationContent)//.replace("##user.Username##", userModel.Username)
+
+	let operationHtml = toDom(operationHtmlString);
+
+	let operationListDiv = document.getElementById("operation-list");
+	operationListDiv.appendChild(operationHtml);
+	OperationDone(operation.Id);
+	let deleteBtn = document.getElementById("operation-delete-btn-" + operation.Id);
+	deleteBtn.onclick = tryDeleteOperation.bind(null, operation.Id);
+	
+
+}
 function tryDeleteOperation(operationId) {
 	httpRequest("api/Mission/DeleteOperation", "DELETE", operationId.toString(), handleDeleteOperation.bind(null, operationId), showError.bind(null, "System Error"));
 }

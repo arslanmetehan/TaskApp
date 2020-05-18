@@ -43,7 +43,7 @@ namespace TaskApp.Controllers
 			}
 			catch (Exception exp)
 			{
-				return Json(ApiResponse<List<MissionModel>>.WithError(exp.ToString()));
+				return Json(ApiResponse<List<ForumPostModel>>.WithError(exp.ToString()));
 			}
 		}
 		[HttpPost]
@@ -52,8 +52,12 @@ namespace TaskApp.Controllers
 		{
 			try
 			{
-				ForumPostModel result = null;
 				var user = this._userService.GetOnlineUser(this.HttpContext);
+				if(user == null)
+				{
+					return Json(ApiResponse<List<ForumPostModel>>.WithError("Not authorized !"));
+				}
+				ForumPostModel result = null;
 				var newPost = new ForumPost();
 				newPost.PostContent = model.PostContent;
 				newPost.UserId = user.Id;
@@ -66,7 +70,7 @@ namespace TaskApp.Controllers
 			}
 			catch (Exception exp)
 			{
-				return Json(ApiResponse<MissionModel>.WithError(exp.ToString()));
+				return Json(ApiResponse<ForumPostModel>.WithError(exp.ToString()));
 			}
 		}
 		[HttpDelete]
@@ -75,7 +79,16 @@ namespace TaskApp.Controllers
 		{
 			try
 			{
-				
+				var user = this._userService.GetOnlineUser(this.HttpContext);
+				if (user == null)
+				{
+					return Json(ApiResponse<List<ForumPostModel>>.WithError("Not authorized !"));
+				}
+				var post = this._forumPostService.GetById(postId);
+				if(user.Id != post.UserId)
+				{
+					return Json(ApiResponse<List<ForumPostModel>>.WithError("Not authorized !"));
+				}
 				this._forumPostService.Delete(postId);
 
 				return Json(ApiResponse.WithSuccess());

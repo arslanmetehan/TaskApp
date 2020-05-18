@@ -19,14 +19,6 @@ namespace TaskApp.Persistence.Dapper
                 message.Id = dbConnection.ExecuteScalar<int>("SELECT last_insert_rowid()");
             }
         }
-        public void Delete(int id)
-        {
-            using (IDbConnection dbConnection = this.OpenConnection())
-            {
-                dbConnection.Execute("DELETE FROM DirectMessage WHERE Id = @Id", new { Id = id });
-                //dbConnection.Query("UPDATE DirectMessage SET MessageContent = @MessageContent  WHERE Id = @Id", user);
-            }
-        }
         public void UpdateMessage(DirectMessage message)
         {
             using (IDbConnection dbConnection = this.OpenConnection())

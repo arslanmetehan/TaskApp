@@ -31,12 +31,7 @@ namespace TaskApp.Persistence.Dapper
         {
             using (IDbConnection dbConnection = this.OpenConnection())
             {
-                //return dbConnection.Query<Mission>("SELECT m.*, m.UserId as Id FROM User u, Mission m WHERE u.Id = m.UserId");
-                //return dbConnection.Query<Mission>("SELECT * FROM Mission");
-                //return dbConnection.Query<MissionModel>("SELECT * FROM Mission WHERE UserId = @userId", new { UserId = userId });
                 return dbConnection.Query<MissionModel>("SELECT m.*, u.Username as MissionUsername FROM Mission m, User u WHERE u.Id = m.UserId AND UserId = @UserId", new { UserId = userId });
-
-
             }
         }
 
@@ -44,45 +39,26 @@ namespace TaskApp.Persistence.Dapper
         {
             using (IDbConnection dbConnection = this.OpenConnection())
             {
-                //return dbConnection.QuerySingle<MissionModel>("SELECT * FROM Mission WHERE Id = @Id", new { Id = id });
                 return dbConnection.QuerySingle<MissionModel>("SELECT m.*, u.Username as MissionUsername FROM Mission m, User u WHERE u.Id = m.UserId AND m.Id = @Id", new { Id = id });
             }
         }
-       /* public MissionModel GetById(int id)
-        {
-            using (IDbConnection dbConnection = this.OpenConnection())
-            {
-                return dbConnection.QuerySingle<MissionModel>("SELECT m.*, u.Username FROM Mission m, User u WHERE u.Id = m.UserId AND m.Id = @Id", new { Id = id });
-            }
-        }*/
-       /* public IEnumerable<Mission> GetByUserId(int missionUserId)
-        {
-            using (IDbConnection dbConnection = this.OpenConnection())
-            {
-                return dbConnection.Query<Mission>("SELECT * FROM Mission WHERE userId = @userId", new { userId = missionUserId });
-            }
-        }*/
 
         public IEnumerable<MissionModel> GetAllMissions()
         {
             using (IDbConnection dbConnection = this.OpenConnection())
             {
-                return dbConnection.Query<MissionModel>("SELECT * FROM Mission");
+                // DONE: User ile joinle
+                return dbConnection.Query<MissionModel>("SELECT m.*, u.Username as MissionUsername FROM Mission m, User u WHERE u.Id = m.UserId");
             }
         }
+
         public IEnumerable<Mission> GetByUserId(int missionUserId)
         {
             using (IDbConnection dbConnection = this.OpenConnection())
             {
-                return dbConnection.Query<Mission>("SELECT * FROM Mission WHERE userId = @userId", new { userId = missionUserId });
+                // DONE: User ile joinle
+                return dbConnection.Query<Mission>("SELECT m.*, u.Username as MissionUsername FROM Mission m, User u WHERE u.Id = m.UserId AND m.UserId = @UserId", new { UserId = missionUserId });
             }
         }
-        /*IEnumerable<Mission> IMissionRepository.GetAll()
-        {
-            using (IDbConnection dbConnection = this.OpenConnection())
-            {
-                return dbConnection.Query<Mission>("SELECT * FROM Mission");
-            }
-        }*/
     }
 }

@@ -10,7 +10,7 @@ function tryGetMissions() {
 	httpRequest("api/Mission/GetMyMissions", "GET", null, handleGetMissions, showError.bind(null, "System Error"));
 }
 function redirectOperationDetails(missionId) {
-	redirect("User/MyMissionDetail/" + missionId);
+	redirect("User/MissionDetail/" + missionId);
 }
 function handleGetMissions(response) {
 	if (!response.Success) {

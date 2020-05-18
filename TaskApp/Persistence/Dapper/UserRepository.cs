@@ -20,13 +20,6 @@ namespace TaskApp.Persistence.Dapper
                 user.Id = dbConnection.ExecuteScalar<int>("SELECT last_insert_rowid()");
             }
         }
-        public void Delete(int id)
-        {
-            using (IDbConnection dbConnection = this.OpenConnection())
-            {
-                dbConnection.Execute("DELETE FROM User WHERE Id = @Id", new { Id = id });
-            }
-        }
         public void UpdateUser(User user)
         {
             using (IDbConnection dbConnection = this.OpenConnection())
@@ -38,7 +31,8 @@ namespace TaskApp.Persistence.Dapper
         {
             using (IDbConnection dbConnection = this.OpenConnection())
             {
-                dbConnection.Execute("INSERT INTO Follow (FollowerUserId, TargetUserId) VALUES("+followerId+" , "+targetId+")", new { FollowerUserId = followerId, TargetUserId = targetId });
+                // DONE: parametreler düzeltilmeli
+                dbConnection.Execute("INSERT INTO Follow (FollowerUserId, TargetUserId) VALUES(@FollowerUserId, @TargetUserId)", new { FollowerUserId = followerId, TargetUserId = targetId });
                
             }
         }
@@ -46,7 +40,8 @@ namespace TaskApp.Persistence.Dapper
         {
             using (IDbConnection dbConnection = this.OpenConnection())
             {
-                dbConnection.Execute("DELETE From Follow WHERE FollowerUserId = "+followerId+" AND TargetUserId = "+targetId+"", new { FollowerUserId = followerId, TargetUserId = targetId });
+                // DONE: parametreler düzeltilmeli
+                dbConnection.Execute("DELETE From Follow WHERE FollowerUserId = @FollowerUserId AND TargetUserId = @TargetUserId", new { FollowerUserId = followerId, TargetUserId = targetId });
             }
         }
 
@@ -55,6 +50,13 @@ namespace TaskApp.Persistence.Dapper
             using (IDbConnection dbConnection = this.OpenConnection())
             {
                 return dbConnection.Query<UserModel>("SELECT * FROM User");
+            }
+        }
+        public IEnumerable<UserModel> GetUsersExcept(int userId)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+                return dbConnection.Query<UserModel>("SELECT * FROM User WHERE Id != @Id", new { Id = userId });
             }
         }
         public IEnumerable<UserModel> GetTargetUsersByOnlineUserId(int onlineUserId)
@@ -103,6 +105,13 @@ namespace TaskApp.Persistence.Dapper
             using (IDbConnection dbConnection = this.OpenConnection())
             {
                 return dbConnection.QuerySingle<UserModel>("SELECT * FROM User WHERE Id = @Id", new { Id = id });
+            }
+        }
+        public int UsernameCounter(string username)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+                return dbConnection.QuerySingle<int>("SELECT COUNT(*) FROM User WHERE Username = @Username", new { Username = username });
             }
         }
 

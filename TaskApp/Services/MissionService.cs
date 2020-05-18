@@ -15,12 +15,14 @@ namespace TaskApp.Services
         private readonly IUserRepository _userRepository;
         private readonly ILogRepository _logRepository;
         private readonly IMissionRepository _missionRepository;
+        private readonly IOperationService _operationService;
 
-        public MissionService(IUserRepository userRepository, ILogRepository logRepository, IMissionRepository missionRepository)
+        public MissionService(IUserRepository userRepository, ILogRepository logRepository, IMissionRepository missionRepository, IOperationService operationService)
         {
             this._userRepository = userRepository;
             this._logRepository = logRepository;
             this._missionRepository = missionRepository;
+            this._operationService = operationService;
         }
 
         public void AddNewMission(Mission mission)
@@ -31,6 +33,7 @@ namespace TaskApp.Services
 
         public void Delete(int id)
         {
+            this._operationService.DeleteOperationsByMissionId(id);
             var mission = this._missionRepository.GetById(id);
             this._missionRepository.Delete(id);
             this._logRepository.Log(Enums.LogType.Info, $"Deleted User : {mission.MissionName}");
@@ -40,44 +43,20 @@ namespace TaskApp.Services
         {
             return this._missionRepository.GetById(id);
         }
-        /*List<MissionModel> IMissionService.GetByMissionId()
-        {
-            var users = this._userRepository.GetAll().ToList();
-            var missions = this._missionRepository.GetAllMissions().ToList();
 
-            /*users.ForEach(u =>
-            {
-                u.Username = missions.FirstOrDefault(ug => ug.Id == u.GroupId)?.Name;
-                
-            });
-           /* missions.ForEach(m =>
-            {
-                m.MissionUsername = users.FirstOrDefault(u => u.Id == m.UserId)?.Username;
-
-            });
-
-            return missions;
-        }*/
-        List<MissionModel> IMissionService.GetMissionsByUserId(int userId)
+        public List<MissionModel> GetMissionsByUserId(int userId)
         {
             return this._missionRepository.GetByUserId(userId).Select(article => new MissionModel(article)).ToList();
         }
+
         public IEnumerable<MissionModel> GetAll()
         {
             return this._missionRepository.GetAllMissions().ToList();
         }
-        List<MissionModel> IMissionService.GetAllMyMissionsByUserId(int userId)
+
+        public List<MissionModel> GetAllMyMissionsByUserId(int userId)
         {
-           
-            
             var missions = this._missionRepository.GetMissionsByUserId(userId).ToList();
-
-
-            /*foreach (var mission in missions)
-            {
-                
-                mission.MissionUsername = user.Username;
-            }*/
 
             return missions;
         }

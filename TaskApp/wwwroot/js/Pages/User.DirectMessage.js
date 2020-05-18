@@ -110,9 +110,9 @@ function OpenMessageList(receiverId)
 
 	tryGetMessages(receiverId);
 }
-function tryGetMessages(receiverId) {
+function tryGetMessages(otherUserId) {
 
-	httpRequest("api/User/GetMessages/?receiverId=" + receiverId, "GET", null, handleGetMessages, showError.bind(null, "System Error"));
+	httpRequest("api/User/GetMessages/?otherUserId=" + otherUserId, "GET", null, handleGetMessages, showError.bind(null, "System Error"));
 }
 function tryGetNewMessages() {
 	let lastMessage = page.lastMessage;
