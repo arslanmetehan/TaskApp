@@ -36,7 +36,12 @@ namespace TaskApp.Services
             this._operationRepository.Delete(id);
             this._logRepository.Log(Enums.LogType.Info, $"Deleted User : {operation.OperationContent}");
         }
+        public void DeleteOperationsByMissionId(int missionId)
+        {
+          
+            this._operationRepository.DeleteOperationsByMissionId(missionId);
 
+        }
         public OperationModel GetById(int id)
         {
             return this._operationRepository.GetById(id);
@@ -44,10 +49,6 @@ namespace TaskApp.Services
         public void UpdateOperationById(int id)
         {
             this._operationRepository.UpdateOperationById(id);
-        }
-        public OperationModel GetByOptId(int id)
-        {
-            return this._operationRepository.GetByOptId(id);
         }
         public List<OperationModel> GetAll()
         {

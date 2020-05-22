@@ -53,7 +53,6 @@ function appendUser(user) {
 	let userTemplate = '<div id="user-id-##user.Id##">';
 	userTemplate += '<div>##user.Username##';
 	userTemplate += '<div>##user.Email##';
-	userTemplate += '<div style="margin-bottom:20px;"><button id="user-delete-btn-##user.Id##">Delete User</button></div>';
 	userTemplate += '<div>Welcome';
 	userTemplate += '</div>';
 
@@ -67,24 +66,7 @@ function appendUser(user) {
 	let userListDiv = document.getElementById("user-list");
 	userListDiv.appendChild(userHtml);
 
-	let deleteBtn = document.getElementById("user-delete-btn-" + user.Id);
-	deleteBtn.onclick = tryDeleteUser.bind(null, user.Id);
 }
-
-function tryDeleteUser(userId) {
-	httpRequest("api/User/DeleteUser", "DELETE", userId.toString(), handleDeleteUser.bind(null, userId), showError.bind(null, "System Error"));
-}
-
-function handleDeleteUser(userId, response) {
-	if (!response.Success) {
-		showError(response.ErrorMessage);
-		return;
-	}
-
-	let userDiv = document.getElementById("user-id-" + userId);
-	userDiv.parentNode.removeChild(userDiv);
-}
-
 function showError(message) {
 	let errorDiv = document.getElementById("error");
 	errorDiv.innerHTML = message;

@@ -11,13 +11,14 @@ namespace TaskApp.Services
     public interface IUserService
     {
 		void AddNewUser(User user);
-		void Delete(int id);
 		void UpdateUser(User user);
 		UserModel GetById(int id);
 		void Logout(HttpContext httpContext);
 		bool TryLogin(UserLoginModel loginData, HttpContext httpContext);
 		UserModel GetOnlineUser(HttpContext httpContext);
 		List<UserModel> GetAllUsers();
+		int UsernameCounter(string username);
+		List<UserModel> GetUsersExcept(int userId);
 		void FollowAnotherUser(int followerId,int targerId);
 		void UnFollowAnotherUser(int followerId, int targetId);
 		List<UserModel> GetTargetUsersByOnlineUserId(int onlineUserId);

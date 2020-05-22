@@ -5,11 +5,11 @@ function main() {
 	let missionId = parseInt(missionIdInput);
 	
 
-	tryGetOperations();
+	tryGetOperations(missionId);
 }
 
-function tryGetOperations() {
-	httpRequest("api/Mission/GetCurrentMissionOperations", "GET", null, handleGetOperations, showError.bind(null, "System Error"));
+function tryGetOperations(missionId) {
+	httpRequest("api/Mission/GetOperationsByMissionId/?missionId=" + missionId, "GET", null, handleGetOperations, showError.bind(null, "System Error"));
 }
 
 function handleGetOperations(response) {
@@ -17,19 +17,15 @@ function handleGetOperations(response) {
 		showError(response.ErrorMessage);
 		return;
 	}
-	let missionIdInput = parseInt(document.getElementById("missionid").value);
 	page.operations = response.Data;
 	for (let i = 0; i < page.operations.length; i++) {
 		let operation = page.operations[i];
-	
-		if (operation.MissionId == missionIdInput)
-		{
-			appendOperation(operation);
-			if (operation.OperationStatus == 1) {
-				OperationDone(operation.Id);
-			}
+		appendOperation(operation);
+		if (operation.OperationStatus == 1) {
+			OperationDone(operation.Id);
 		}
-		
+
+
 	}
 
 }
@@ -40,7 +36,6 @@ function OperationDone(operationId) {
 		"text-decoration-color: #ff5733;";
 	//let optStatus = document.getElementById("operation-status-" + operationId);
 	//optStatus.value = 1;
-	tryUpdateOperation(operationId);
 }
 function tryUpdateOperation(operationId) {
 	let optId = operationId;

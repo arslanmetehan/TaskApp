@@ -27,13 +27,6 @@ namespace TaskApp.Services
             this._logRepository.Log(Enums.LogType.Info, $"Inserted New User : {user.Username}");
             // this._emailService.SendEmail("fsdf", "dsfsdfsdfdsf");
         }
-
-        public void Delete(int id)
-        {
-            var user = this._userRepository.GetById(id);
-            this._userRepository.Delete(id);
-            this._logRepository.Log(Enums.LogType.Info, $"Deleted User : {user.Username}");
-        }
         public void UpdateUser(User user)
         {
         
@@ -56,17 +49,18 @@ namespace TaskApp.Services
         {
             return this._userRepository.GetById(id);
         }
+        public int UsernameCounter(string username)
+        {
+            return this._userRepository.UsernameCounter(username);
+        }
         public List<UserModel> GetAllUsers()
         {
             var users = this._userRepository.GetAll().ToList();
-            /* var missions = this._missionRepository.GetAll().Select(mission => new MissionModel(mission)).ToList();
-
-             users.ForEach(u =>
-             {
-                 u.Username = missions.FirstOrDefault(m => m.UserId == u.Id)?.Name;
-                 m.MissionUsername = users.FirstOrDefault(m => m.UserId == u.Id)?.Name;
-             });*/
-
+            return users;
+        }
+        public List<UserModel> GetUsersExcept(int userId)
+        {
+            var users = this._userRepository.GetUsersExcept(userId).ToList();
             return users;
         }
         public List<UserModel> GetTargetUsersByOnlineUserId(int onlineUserId)

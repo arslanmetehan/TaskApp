@@ -10,8 +10,8 @@ namespace TaskApp.Persistence
     public interface IUserRepository
     {
         void Insert(User user);
-        void Delete(int id);
         IEnumerable<UserModel> GetAll();
+        int UsernameCounter(string username);
         UserModel GetById(int id);
         int GetUserIdByLogin(string username, string password);
         void FollowTargetUser(int followerId, int targetId);
@@ -22,5 +22,7 @@ namespace TaskApp.Persistence
         void UpdateUser(User user);
         IEnumerable<UserModel> GetTargetUsersById(int userId);
         IEnumerable<UserModel> GetFollowerUsersById(int userId);
+        IEnumerable<UserModel> GetUsersExcept(int userId);
+        
     }
 }

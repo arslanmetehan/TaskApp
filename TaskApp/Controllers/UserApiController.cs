@@ -29,6 +29,7 @@ namespace TaskApp.Controllers
 			_directMessageService = directMessageService;
 
 		}
+
         [HttpGet]
 		[Route(nameof(GetActiveUsers))]
 		public ActionResult<ApiResponse<List<UserModel>>> GetActiveUsers()
@@ -36,8 +37,7 @@ namespace TaskApp.Controllers
 			try
 			{
 				var users = this._userService.GetAllUsers();
-				var user = this._userService.GetOnlineUser(this.HttpContext);
-				users.Remove(user);
+
 				var response = ApiResponse<List<UserModel>>.WithSuccess(users);
 
 				return Json(response);
@@ -47,6 +47,7 @@ namespace TaskApp.Controllers
 				return Json(ApiResponse<List<UserModel>>.WithError(exp.ToString()));
 			}
 		}
+
 		[HttpGet]
 		[Route(nameof(GetTargetUsers))]
 		public ActionResult<ApiResponse<List<UserModel>>> GetTargetUsers()
@@ -54,18 +55,15 @@ namespace TaskApp.Controllers
 			try
 			{
 				var onlineUser = this._userService.GetOnlineUser(this.HttpContext);
+				if (onlineUser == null)
+				{
+					return Json(ApiResponse<List<ForumPostModel>>.WithError("Not authorized !"));
+				}
+				
 				
 				var onlineUserId = onlineUser.Id;
 				var users = this._userService.GetTargetUsersByOnlineUserId(onlineUserId);
-	
-				for(int i=0; i<users.Count;i++)
-				{
-					if (users[i].Id == onlineUserId)
-					{
-						users.RemoveAt(i);
-					}
-				}
-		
+
 				var response = ApiResponse<List<UserModel>>.WithSuccess(users);
 
 				return Json(response);
@@ -75,6 +73,7 @@ namespace TaskApp.Controllers
 				return Json(ApiResponse<List<UserModel>>.WithError(exp.ToString()));
 			}
 		}
+
 		[HttpGet]
 		[Route(nameof(GetTargetUserMissions))]
 		public ActionResult<ApiResponse<List<MissionModel>>> GetTargetUserMissions()
@@ -82,28 +81,27 @@ namespace TaskApp.Controllers
 			try
 			{
 				var onlineUser = this._userService.GetOnlineUser(this.HttpContext);
+				if (onlineUser == null)
+				{
+					return Json(ApiResponse<List<ForumPostModel>>.WithError("Not authorized !"));
+				}
 
 				var onlineUserId = onlineUser.Id;
 				var users = this._userService.GetTargetUsersByOnlineUserId(onlineUserId);
-
-				for (int i = 0; i < users.Count; i++)
-				{
-					if (users[i].Id == onlineUserId)
-					{
-						users.RemoveAt(i);
-					}
-				}
+				var userIds = users.Select(u => u.Id);
+				var userIdSet = new HashSet<int>(userIds);
+				
+				// DONE: targetUsers Id lerini HashSet e koy
+				// DONE: sadecee mission dönmeli, mission ın userId si targetUsers HashSet inde varsa ekle, yoksa ekleme
+				
 				List<MissionModel> targetUserMissions = new List<MissionModel>();
+				
 				var missions = this._missionService.GetAll().ToList();
-				for(int i=0;i<users.Count;i++)
+				for(int i=0;i< missions.Count;i++)
 				{
-					for(int k=0;k<missions.Count;k++)
+					if(userIdSet.Contains(missions[i].UserId))
 					{
-						if(users[i].Id == missions[k].UserId)
-						{
-							missions[k].MissionUsername = users[i].Username;
-							targetUserMissions.Add(missions[k]);
-						}
+						targetUserMissions.Add(missions[i]);
 					}
 				}
 
@@ -116,19 +114,14 @@ namespace TaskApp.Controllers
 				return Json(ApiResponse<List<UserModel>>.WithError(exp.ToString()));
 			}
 		}
+
 		[HttpGet]
 		[Route(nameof(GetTargetUsersById))]
 		public ActionResult<ApiResponse<List<UserModel>>> GetTargetUsersById(int userId)
 		{
 			try
 			{
-				
-				
-				//var users = this._userService.GetTargetUsersByOnlineUserId(onlineUserId);
 				var users = this._userService.GetTargetUsersById(userId);
-
-
-				
 				var response = ApiResponse<List<UserModel>>.WithSuccess(users);
 
 				return Json(response);
@@ -138,6 +131,7 @@ namespace TaskApp.Controllers
 				return Json(ApiResponse<List<UserModel>>.WithError(exp.ToString()));
 			}
 		}
+
 		[HttpGet]
 		[Route(nameof(GetFollowerUsersById))]
 		public ActionResult<ApiResponse<List<UserModel>>> GetFollowerUsersById(int userId)
@@ -154,28 +148,19 @@ namespace TaskApp.Controllers
 				return Json(ApiResponse<List<UserModel>>.WithError(exp.ToString()));
 			}
 		}
+
 		[HttpGet]
 		[Route(nameof(GetNotTargetUsers))]
 		public ActionResult<ApiResponse<List<UserModel>>> GetNotTargetUsers()
 		{
 			try
 			{
-				
+				// DONE _userService.GetUsersExcept i kullanacak şekilde düzelt
 				var user = this._userService.GetOnlineUser(this.HttpContext);
 				var onlineUserId = user.Id;
 				var targetUsers = this._userService.GetTargetUsersByOnlineUserId(onlineUserId);
-				var allUsers = this._userService.GetAllUsers();
-
-
+				var allUsers = this._userService.GetUsersExcept(onlineUserId);
 	
-				for (int i = 0; i < allUsers.Count; i++)
-				{
-					if (allUsers[i].Id == onlineUserId)
-					{
-						allUsers.RemoveAt(i);
-						break;
-					}
-				}
 				bool targetCheck = false;
 				List<UserModel> notTargetUsers = new List<UserModel>();
 				for(int i=0;i< allUsers.Count;i++)
@@ -207,16 +192,21 @@ namespace TaskApp.Controllers
 				return Json(ApiResponse<List<UserModel>>.WithError(exp.ToString()));
 			}
 		}
+
 		[HttpGet]
 		[Route(nameof(GetFollowerUsers))]
 		public ActionResult<ApiResponse<List<UserModel>>> GetFollowerUsers()
 		{
 			try
 			{
-				var user = this._userService.GetOnlineUser(this.HttpContext);
-				var onlineUserId = user.Id;
+				var onlineUser = this._userService.GetOnlineUser(this.HttpContext);
+				if (onlineUser == null)
+				{
+					return Json(ApiResponse<List<ForumPostModel>>.WithError("Not authorized !"));
+				}
+				var onlineUserId = onlineUser.Id;
 				var users = this._userService.GetFollowerUsersByOnlineUserId(onlineUserId);
-				users.Remove(user);
+
 				var response = ApiResponse<List<UserModel>>.WithSuccess(users);
 
 				return Json(response);
@@ -226,6 +216,7 @@ namespace TaskApp.Controllers
 				return Json(ApiResponse<List<UserModel>>.WithError(exp.ToString()));
 			}
 		}
+
 		[HttpPost]
 		[Route(nameof(CreateUser))]
 		public ActionResult<ApiResponse<UserModel>> CreateUser([FromBody]CreateUserModel model)
@@ -248,19 +239,18 @@ namespace TaskApp.Controllers
 
 				var newUser = new User();
 				newUser.Username = model.Username;
+				var usernameControl = _userService.UsernameCounter(model.Username);
+				if(usernameControl >= 1)
+				{
+					return Json(ApiResponse<UserModel>.WithError("This Username has already exist !"));
+				}
 				newUser.Email = model.Email;
 				newUser.Password = model.Password;
-				newUser.BirthYear = Convert.ToInt32(model.BirthYear);
-				
-				var users = _userService.GetAllUsers();
-				foreach (var user in users)
-				{
-					if (user.Username == newUser.Username)
-					{
-						
-						return Json(ApiResponse<UserModel>.WithError("This Username has already exist !"));
-					}
-				}
+				newUser.BirthYear = model.BirthYear;
+
+				//DONE Username ile aynı user var mı diye repository bakmalı. SELECT COUNT(*) FROM User WHERE Username = @Username
+
+
 				this._userService.AddNewUser(newUser);
 				result = this._userService.GetById(newUser.Id);
 
@@ -272,29 +262,18 @@ namespace TaskApp.Controllers
 			}
 		}
 
-		[HttpDelete]
-		[Route(nameof(DeleteUser))]
-		public ActionResult<ApiResponse> DeleteUser([FromBody] int userId)
-		{
-			try
-			{
-				this._userService.Delete(userId);
-
-				return Json(ApiResponse.WithSuccess());
-			}
-			catch (Exception exp)
-			{
-				return Json(ApiResponse.WithError(exp.ToString()));
-			}
-		}
 		[HttpPost]
 		[Route(nameof(Follow))]
 		public ActionResult<ApiResponse> Follow([FromBody] int targetId)
 		{
 			try
 			{
-				var user = this._userService.GetOnlineUser(this.HttpContext);
-				var onlineUserId = user.Id;
+				var onlineUser = this._userService.GetOnlineUser(this.HttpContext);
+				if (onlineUser == null)
+				{
+					return Json(ApiResponse<List<ForumPostModel>>.WithError("Not authorized !"));
+				}
+				var onlineUserId = onlineUser.Id;
 				this._userService.FollowAnotherUser(onlineUserId, targetId);
 
 				return Json(ApiResponse.WithSuccess());
@@ -304,14 +283,19 @@ namespace TaskApp.Controllers
 				return Json(ApiResponse.WithError(exp.ToString()));
 			}
 		}
+
 		[HttpDelete]
 		[Route(nameof(Unfollow))]
 		public ActionResult<ApiResponse> Unfollow([FromBody] int targetId)
 		{
 			try
 			{
-				var user = this._userService.GetOnlineUser(this.HttpContext);
-				var onlineUserId = user.Id;
+				var onlineUser = this._userService.GetOnlineUser(this.HttpContext);
+				if (onlineUser == null)
+				{
+					return Json(ApiResponse<List<ForumPostModel>>.WithError("Not authorized !"));
+				}
+				var onlineUserId = onlineUser.Id;
 				this._userService.UnFollowAnotherUser(onlineUserId, targetId);
 
 				return Json(ApiResponse.WithSuccess());
@@ -321,13 +305,21 @@ namespace TaskApp.Controllers
 				return Json(ApiResponse.WithError(exp.ToString()));
 			}
 		}
+
 		[HttpPut]
 		[Route(nameof(UpdateUser))]
 		public ActionResult<ApiResponse<UserModel>> UpdateUser([FromBody]UpdateUserModel model)
 		{
 			try
 			{
-				var user = this._userService.GetOnlineUser(this.HttpContext).ToEntity();
+				var onlineUser = this._userService.GetOnlineUser(this.HttpContext);
+
+				if (onlineUser == null)
+				{
+					return Json(ApiResponse.WithError("Not Authorized"));
+				}
+
+				var user = onlineUser.ToEntity();
 				user.Email = model.Email;
 				user.Username = model.Username;
 				user.Password = model.Password;
@@ -342,6 +334,7 @@ namespace TaskApp.Controllers
 				return Json(ApiResponse.WithError(exp.ToString()));
 			}
 		}
+
 		[HttpPost]
 		[Route(nameof(Login))]
 		public ActionResult<ApiResponse> Login([FromBody]UserLoginModel model)
@@ -376,17 +369,22 @@ namespace TaskApp.Controllers
 				return Json(ApiResponse<UserModel>.WithError(exp.ToString()));
 			}
 		}
+
+		// DONE: isimlendirmelerde düzeltme gerekli
 		[HttpGet]
 		[Route(nameof(GetMessages))]
-		public ActionResult<ApiResponse<List<DirectMessageModel>>> GetMessages(int receiverId)
+		public ActionResult<ApiResponse<List<DirectMessageModel>>> GetMessages(int otherUserId)
 		{
 			try
 			{
-
-
-				var user = this._userService.GetOnlineUser(this.HttpContext);
-				int senderId = user.Id;
-				var messages = this._directMessageService.GetMessagesBySenderAndReceiverId(senderId, receiverId);
+				var onlineUser = this._userService.GetOnlineUser(this.HttpContext);
+				if (onlineUser == null)
+				{
+					return Json(ApiResponse<List<ForumPostModel>>.WithError("Not authorized !"));
+				}
+				
+				int senderId = onlineUser.Id;
+				var messages = this._directMessageService.GetMessagesBySenderAndReceiverId(senderId, otherUserId);
 
 
 
@@ -399,18 +397,27 @@ namespace TaskApp.Controllers
 				return Json(ApiResponse<List<UserModel>>.WithError(exp.ToString()));
 			}
 		}
+
 		[HttpPost]
 		[Route(nameof(CreateMessage))]
 		public ActionResult<ApiResponse<DirectMessageModel>> CreateMessage([FromBody]CreateDirectMessageModel model)
 		{
+			// DONE: onlineUserId ile senderId aynı olmak zorunda
 			try
 			{
-
+				var onlineUser = this._userService.GetOnlineUser(this.HttpContext);
+				if (onlineUser == null)
+				{
+					return Json(ApiResponse<List<ForumPostModel>>.WithError("Not authorized !"));
+				}
 				DirectMessageModel result = null;
-
+				if(model.SenderId != onlineUser.Id)
+				{
+					return Json(ApiResponse<List<ForumPostModel>>.WithError("Not authorized !"));
+				}
 				var newMessage = new DirectMessage();
-				newMessage.SenderId = Convert.ToInt32(model.SenderId);
-				newMessage.ReceiverId = Convert.ToInt32(model.ReceiverId);
+				newMessage.SenderId = model.SenderId;
+				newMessage.ReceiverId = model.ReceiverId;
 				newMessage.MessageContent = model.MessageContent;
 				newMessage.IsDeleted = 0;
 				
@@ -424,6 +431,7 @@ namespace TaskApp.Controllers
 				return Json(ApiResponse<UserModel>.WithError(exp.ToString()));
 			}
 		}
+
 		[HttpDelete]
 		[Route(nameof(DeleteMessage))]
 		public ActionResult<ApiResponse> DeleteMessage([FromBody] int messageId)
@@ -436,8 +444,13 @@ namespace TaskApp.Controllers
 					return Json(ApiResponse.WithError("You cant delete this message !"));
 				}
 
-				//this._directMessageService.Delete(messageId);
+				// DONE: sadece kendi mesajımı silebilirim
+
 				var message = this._directMessageService.GetById(messageId).ToEntity();
+				if(message.SenderId != user.Id)
+				{
+					return Json(ApiResponse.WithError("You cant delete this message !"));
+				}
 				message.MessageContent = "Bu Mesaj Silindi !";
 				message.IsDeleted = 1;
 				this._directMessageService.UpdateMessage(message);
@@ -449,36 +462,27 @@ namespace TaskApp.Controllers
 				return Json(ApiResponse.WithError(exp.ToString()));
 			}
 		}
+
 		[HttpGet]
 		[Route(nameof(GetNewMessages))]
 		public ActionResult<ApiResponse<List<DirectMessageModel>>> GetNewMessages(int lastMessageId)
 		{
 			try
 			{
-
-				if(lastMessageId == -1)
+				var onlineUser = this._userService.GetOnlineUser(this.HttpContext);
+				if (onlineUser == null)
 				{
-					List<DirectMessageModel> emptyMessage = new List<DirectMessageModel>();
-					var response = ApiResponse<List<DirectMessageModel>>.WithSuccess(emptyMessage);
-					return Json(response);
-
+					return Json(ApiResponse.WithError("You cant delete this message !"));
 				}
-				else
-				{
-					var user = this._userService.GetOnlineUser(this.HttpContext);
-					int receiverId = user.Id;
-					var message = this._directMessageService.GetById(lastMessageId);
+				
+				int receiverId = onlineUser.Id;
+				var message = this._directMessageService.GetById(lastMessageId);
 
-					var messages = this._directMessageService.GetNewMessages(lastMessageId, message.SenderId, receiverId);
+				var messages = this._directMessageService.GetNewMessages(lastMessageId, message.SenderId, receiverId);
 
+				var response = ApiResponse<List<DirectMessageModel>>.WithSuccess(messages);
 
-
-					var response = ApiResponse<List<DirectMessageModel>>.WithSuccess(messages);
-
-					return Json(response);
-
-				}
-
+				return Json(response);
 			}
 			catch (Exception exp)
 			{

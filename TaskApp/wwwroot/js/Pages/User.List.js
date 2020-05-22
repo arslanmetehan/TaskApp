@@ -104,9 +104,6 @@ function appendUser(user) {
 
 	let followBtn = document.getElementById("follow-btn-" + user.Id);
 	followBtn.onclick = tryFollowUser.bind(null, user.Id);
-
-	let profileBtn = document.getElementById("user-profil-btn" + user.Id);
-	
 }
 function appendFollowingUser(user)
 {

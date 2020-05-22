@@ -10,7 +10,6 @@ namespace TaskApp.Persistence
     public interface IDirectMessageRepository
     {
         void Insert(DirectMessage message);
-        void Delete(int id);
         void UpdateMessage(DirectMessage message);
         DirectMessageModel GetById(int id);
         IEnumerable<DirectMessageModel> GetBySenderId(int senderId);

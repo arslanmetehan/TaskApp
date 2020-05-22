@@ -28,13 +28,6 @@ namespace TaskApp.Services
             this._directMessageRepository.Insert(message);
             this._logRepository.Log(Enums.LogType.Info, $"Inserted New Message : {message.MessageContent}");
         }
-
-        public void Delete(int id)
-        {
-            var message = this._directMessageRepository.GetById(id);
-            this._directMessageRepository.Delete(id);
-            this._logRepository.Log(Enums.LogType.Info, $"Deleted Message : {message.MessageContent}");
-        }
         public void UpdateMessage(DirectMessage message)
         {
 
@@ -45,25 +38,21 @@ namespace TaskApp.Services
         {
             return this._directMessageRepository.GetById(id);
         }
-        List<DirectMessageModel> IDirectMessageService.GetMessagesBySenderId(int senderId)
+        public List<DirectMessageModel> GetMessagesBySenderId(int senderId)
         {
             return this._directMessageRepository.GetBySenderId(senderId).ToList();
         }
-        List<DirectMessageModel> IDirectMessageService.GetMessagesByReceiverId(int receiverId)
+        public List<DirectMessageModel> GetMessagesByReceiverId(int receiverId)
         {
             return this._directMessageRepository.GetByReceiverId(receiverId).ToList();
         }
-        List<DirectMessageModel> IDirectMessageService.GetMessagesBySenderAndReceiverId(int senderId,int receiverId)
+        public List<DirectMessageModel> GetMessagesBySenderAndReceiverId(int senderId,int receiverId)
         {
             return this._directMessageRepository.GetBySenderAndReceiverId(senderId,receiverId).ToList();
         }
-        DirectMessageModel IDirectMessageService.GetLastMessageBySenderAndReceiverId(int senderId, int receiverId)
+        public List<DirectMessageModel> GetNewMessages(int lastMessageId, int senderId, int receiverId)
         {
-            return this._directMessageRepository.GetLastMessage(senderId, receiverId);
-        }
-        List<DirectMessageModel> IDirectMessageService.GetNewMessages(int lastMessageId, int senderId, int receiverId)
-        {
-            return this._directMessageRepository.GetNewMessages(lastMessageId,senderId, receiverId).ToList();
+            return this._directMessageRepository.GetNewMessages(lastMessageId, senderId, receiverId).ToList();
         }
     }
 }

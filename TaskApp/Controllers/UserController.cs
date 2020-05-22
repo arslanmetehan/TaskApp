@@ -34,11 +34,13 @@ namespace TaskApp.Controllers
             var model = this.services.ViewService.CreateViewModel<BaseViewModel>(this.HttpContext, nameof(this.MyMissions));
             return View(model);
         }
-        public ActionResult MyMissionDetail(int id)
+
+        // DONE: adını düzelt
+        public ActionResult MissionDetail(int id)
         {
             var missionId = id;
            
-            var model = this.services.ViewService.CreateViewModel<MissionDetailViewModel>(this.HttpContext, nameof(this.MyMissionDetail));
+            var model = this.services.ViewService.CreateViewModel<MissionDetailViewModel>(this.HttpContext, nameof(this.MissionDetail));
             model.MissionId = id.ToString();
         
             return View(model);
@@ -76,7 +78,12 @@ namespace TaskApp.Controllers
         }
         public ActionResult NewsFeed()
         {
+          
             var model = this.services.ViewService.CreateViewModel<MissionDetailViewModel>(this.HttpContext, nameof(this.NewsFeed));
+            if (model.OnlineUser == null)
+            {
+                return RedirectToAction("Login", "User");
+            }
             return View(model);
         }
         public ActionResult DirectMessage()

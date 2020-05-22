@@ -29,12 +29,17 @@ namespace TaskApp.Persistence.Dapper
                 dbConnection.Execute("DELETE FROM Operation WHERE Id = @Id", new { Id = id });
             }
         }
-
+        public void DeleteOperationsByMissionId(int missionId)
+        {
+            using (IDbConnection dbConnection = this.OpenConnection())
+            {
+                dbConnection.Execute("DELETE FROM Operation WHERE MissionId = @MissionId", new { MissionId = missionId });
+            }
+        }
         public IEnumerable<OperationModel> GetAll()
         {
             using (IDbConnection dbConnection = this.OpenConnection())
             {
-                //return dbConnection.Query<OperationModel>("SELECT o.*, o.MissionId as Id FROM Mission m, Mission m WHERE o.MissionId = m.Id");
                 return dbConnection.Query<OperationModel>("SELECT * FROM Operation");
             }
         }
@@ -43,16 +48,7 @@ namespace TaskApp.Persistence.Dapper
         {
             using (IDbConnection dbConnection = this.OpenConnection())
             {
-                //return dbConnection.QuerySingle<OperationModel>("SELECT * FROM Operation WHERE Id = @Id");
-                return dbConnection.QuerySingle<OperationModel>("SELECT o.*, m.Id as MissionId FROM Operation o, Mission m WHERE m.Id = o.MissionId AND o.Id = @Id", new { Id = id });
-            }
-        }
-        public OperationModel GetByOptId(int id)
-        {
-            using (IDbConnection dbConnection = this.OpenConnection())
-            {
-                //return dbConnection.QuerySingle<OperationModel>("SELECT * FROM Operation WHERE Id = @Id");
-                return dbConnection.QuerySingle<OperationModel>("SELECT * FROM Operation WHERE Id = @Id", new { Id = id });
+                return dbConnection.QuerySingle<OperationModel>("SELECT * FROM Operation o WHERE o.Id = @Id", new { Id = id });
             }
         }
         public IEnumerable<Operation> GetByMissionId(int missionId)
